@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+<meta charset="utf-8">
+<title>UNTTS Gaming - Carta digital</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;background:#050509;}
+  a{color:#22d3ee;text-decoration:none;}
+  a:hover{color:#67e8f9;}
+  ::-webkit-scrollbar{width:0;height:0;}
+  textarea::placeholder{color:#4a5680;}
+  @keyframes pop{0%{transform:scale(.85);opacity:0;}100%{transform:scale(1);opacity:1;}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;background:radial-gradient(900px 500px at 50% -10%,#12121c,#050509 70%);font-family:'Space Grotesk',sans-serif;">
+  <div style="width:412px;height:872px;background:#07070d;border:1px solid rgba(34,211,238,.35);border-radius:44px;overflow:hidden;display:flex;flex-direction:column;color:#e6f0ff;box-shadow:0 0 80px rgba(34,211,238,.12),0 40px 100px rgba(0,0,0,.7);position:relative;">
+
+    <!-- ============ MENU VIEW ============ -->
+    <sc-if value="{{ isMenu }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;height:100%;">
+      <div style="padding:22px 22px 16px;background:linear-gradient(180deg,rgba(34,211,238,.08),transparent);">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;letter-spacing:.14em;">UNTTS<span style="color:#22d3ee;">·</span><span style="font-weight:400;color:#8a97b8;">LOUNGE</span></div>
+          <button onClick="{{ toggleLang }}" style="background:transparent;border:1px solid rgba(34,211,238,.5);color:#22d3ee;font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:12px;letter-spacing:.1em;padding:6px 13px;border-radius:999px;cursor:pointer;">{{ otherLang }}</button>
+        </div>
+        <div style="margin-top:16px;border:1px solid rgba(34,211,238,.3);border-radius:18px;padding:16px 18px;background:radial-gradient(130% 150% at 100% 0%,rgba(240,0,255,.12),rgba(34,211,238,.06) 60%,transparent);">
+          <div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8a97b8;">{{ t.yourSeat }}</div>
+          <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:27px;margin-top:4px;text-shadow:0 0 20px rgba(34,211,238,.5);">{{ seatZone }} · {{ seatCode }}</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:9px;">
+            <span style="font-size:11px;color:#f0f;border:1px solid rgba(240,0,255,.4);border-radius:999px;padding:2px 9px;letter-spacing:.08em;">◈ {{ t.scanned }}</span>
+            <span style="font-size:12px;color:#8a97b8;">{{ t.delivered }}</span>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:6px 22px 20px;">
+        <sc-if value="{{ showFeatured }}" hint-placeholder-val="{{ true }}">
+        <div style="border:1px solid rgba(34,211,238,.4);border-radius:18px;overflow:hidden;margin-bottom:22px;background:#0d0f1e;box-shadow:0 0 24px rgba(34,211,238,.15);">
+          <div style="height:112px;background:repeating-linear-gradient(45deg,#12172b,#12172b 12px,#0d1122 12px,#0d1122 24px);display:flex;align-items:center;justify-content:center;">
+            <span style="font-family:monospace;font-size:11px;color:#4a5680;letter-spacing:.1em;">[ combo shot ]</span>
+          </div>
+          <div style="padding:15px 17px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+            <div>
+              <div style="font-size:10px;letter-spacing:.2em;color:#f0f;text-transform:uppercase;">★ {{ t.featured }}</div>
+              <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;margin-top:3px;">{{ feat.name }}</div>
+              <div style="font-size:13px;color:#8a97b8;margin-top:2px;">{{ feat.desc }}</div>
+              <div style="font-size:11px;color:#22d3ee;margin-top:5px;">{{ feat.save }}</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px;">{{ feat.priceFmt }}</div>
+              <button onClick="{{ feat.onAdd }}" style="margin-top:8px;background:#22d3ee;color:#04121a;border:none;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;padding:8px 16px;border-radius:999px;cursor:pointer;box-shadow:0 0 16px rgba(34,211,238,.5);">+</button>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+        <sc-for list="{{ cats }}" as="cat" hint-placeholder-count="4">
+          <div style="margin-bottom:22px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+              <span style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:15px;letter-spacing:.1em;text-transform:uppercase;">{{ cat.label }}</span>
+              <span style="flex:1;height:1px;background:linear-gradient(90deg,rgba(34,211,238,.5),transparent);"></span>
+            </div>
+            <sc-for list="{{ cat.items }}" as="p" hint-placeholder-count="3">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;background:#0f1020;border:1px solid rgba(34,211,238,.16);border-radius:14px;padding:13px 14px;margin-bottom:10px;">
+                <div style="min-width:0;">
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:15px;">{{ p.name }}</span>
+                    <sc-if value="{{ p.hasTag }}" hint-placeholder-val="{{ true }}"><span style="font-size:9px;color:#f0f;border:1px solid rgba(240,0,255,.5);border-radius:999px;padding:1px 7px;letter-spacing:.08em;text-transform:uppercase;">{{ p.tag }}</span></sc-if>
+                  </div>
+                  <div style="font-size:12.5px;color:#8a97b8;margin-top:2px;">{{ p.desc }}</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+                  <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;color:#22d3ee;">{{ p.priceFmt }}</span>
+                  <button onClick="{{ p.onAdd }}" style="width:32px;height:32px;background:transparent;border:1px solid #22d3ee;color:#22d3ee;font-size:18px;line-height:0;border-radius:10px;cursor:pointer;">+</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+      <div style="padding:14px 20px;background:rgba(9,10,20,.94);border-top:1px solid rgba(34,211,238,.3);display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(8px);">
+        <div style="display:flex;flex-direction:column;">
+          <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;">{{ cart.count }} · {{ cart.subFmt }}</span>
+          <span style="font-size:10px;color:#4a5680;">{{ t.addMore }}</span>
+        </div>
+        <button onClick="{{ openCart }}" style="background:#22d3ee;color:#04121a;border:none;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;letter-spacing:.06em;padding:12px 22px;border-radius:12px;cursor:pointer;box-shadow:0 0 18px rgba(34,211,238,.45);">{{ t.viewOrder }} →</button>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ============ CART VIEW ============ -->
+    <sc-if value="{{ isCart }}">
+    <div style="display:flex;flex-direction:column;height:100%;">
+      <div style="padding:22px 22px 14px;display:flex;align-items:center;gap:14px;border-bottom:1px solid rgba(34,211,238,.18);">
+        <button onClick="{{ backToMenu }}" style="background:transparent;border:1px solid rgba(34,211,238,.4);color:#22d3ee;width:36px;height:36px;border-radius:10px;font-size:18px;cursor:pointer;line-height:0;">←</button>
+        <div>
+          <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:19px;letter-spacing:.06em;">{{ t.yourOrder }}</div>
+          <div style="font-size:12px;color:#8a97b8;">{{ seatZone }} · {{ seatCode }}</div>
+        </div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:18px 22px 20px;">
+        <sc-if value="{{ cart.empty }}">
+          <div style="text-align:center;padding:60px 20px;color:#4a5680;">
+            <div style="font-size:40px;margin-bottom:12px;">🛒</div>
+            <div style="font-size:14px;">{{ t.emptyCart }}</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ cart.has }}" hint-placeholder-val="{{ true }}">
+          <sc-for list="{{ cart.items }}" as="ci" hint-placeholder-count="2">
+            <div style="display:flex;align-items:center;gap:12px;background:#0f1020;border:1px solid rgba(34,211,238,.16);border-radius:14px;padding:12px 14px;margin-bottom:10px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:14px;">{{ ci.name }}</div>
+                <div style="font-size:12px;color:#8a97b8;margin-top:2px;">{{ ci.priceFmt }}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;background:#07070d;border:1px solid rgba(34,211,238,.25);border-radius:10px;padding:3px;">
+                <button onClick="{{ ci.dec }}" style="width:28px;height:28px;background:transparent;border:none;color:#22d3ee;font-size:18px;cursor:pointer;line-height:0;">−</button>
+                <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;min-width:18px;text-align:center;">{{ ci.qty }}</span>
+                <button onClick="{{ ci.inc }}" style="width:28px;height:28px;background:transparent;border:none;color:#22d3ee;font-size:18px;cursor:pointer;line-height:0;">+</button>
+              </div>
+              <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;color:#22d3ee;min-width:56px;text-align:right;">{{ ci.lineFmt }}</div>
+            </div>
+          </sc-for>
+
+          <div style="margin-top:18px;">
+            <div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8a97b8;margin-bottom:8px;">{{ t.notes }}</div>
+            <textarea onChange="{{ setNotes }}" placeholder="{{ t.notesPh }}" rows="2" style="width:100%;background:#0f1020;border:1px solid rgba(34,211,238,.2);border-radius:12px;padding:12px 14px;color:#e6f0ff;font-family:'Space Grotesk',sans-serif;font-size:13px;resize:none;outline:none;"></textarea>
+          </div>
+
+          <sc-if value="{{ showTip }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top:18px;">
+            <div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8a97b8;margin-bottom:8px;">{{ t.tip }}</div>
+            <div style="display:flex;gap:8px;">
+              <sc-for list="{{ tipOpts }}" as="tp" hint-placeholder-count="4">
+                <button onClick="{{ tp.onSelect }}" style="{{ tp.style }}">{{ tp.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+        </sc-if>
+      </div>
+      <sc-if value="{{ cart.has }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:16px 22px 20px;background:rgba(9,10,20,.96);border-top:1px solid rgba(34,211,238,.3);backdrop-filter:blur(8px);">
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#8a97b8;margin-bottom:4px;"><span>{{ t.subtotal }}</span><span>{{ cart.subFmt }}</span></div>
+        <sc-if value="{{ cart.hasTip }}"><div style="display:flex;justify-content:space-between;font-size:13px;color:#8a97b8;margin-bottom:4px;"><span>{{ t.tip }}</span><span>{{ cart.tipFmt }}</span></div></sc-if>
+        <div style="display:flex;justify-content:space-between;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px;margin:6px 0 12px;"><span>{{ t.total }}</span><span style="color:#22d3ee;">{{ cart.totalFmt }}</span></div>
+        <button onClick="{{ submit }}" style="width:100%;background:#22d3ee;color:#04121a;border:none;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;letter-spacing:.04em;padding:15px;border-radius:14px;cursor:pointer;box-shadow:0 0 24px rgba(34,211,238,.5);">{{ t.sendToBar }}</button>
+      </div>
+      </sc-if>
+    </div>
+    </sc-if>
+
+    <!-- ============ CONFIRMATION VIEW ============ -->
+    <sc-if value="{{ isDone }}">
+    <div style="display:flex;flex-direction:column;height:100%;padding:0 26px;justify-content:center;align-items:center;text-align:center;background:radial-gradient(120% 80% at 50% 0%,rgba(34,211,238,.1),transparent);">
+      <div style="width:88px;height:88px;border-radius:50%;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.5);display:flex;align-items:center;justify-content:center;font-size:44px;color:#22d3ee;animation:pop .35s ease;box-shadow:0 0 34px rgba(34,211,238,.4);">✓</div>
+      <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:26px;margin-top:22px;">{{ t.sent }}</div>
+      <div style="font-size:14px;color:#8a97b8;margin-top:8px;max-width:280px;">{{ t.sentDesc }}</div>
+      <div style="margin-top:24px;width:100%;border:1px solid rgba(34,211,238,.28);border-radius:16px;padding:18px;background:#0d0f1e;text-align:left;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span style="color:#8a97b8;font-size:13px;">{{ t.orderNo }}</span><span style="font-family:'Chakra Petch',sans-serif;font-weight:700;color:#22d3ee;">{{ orderNum }}</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span style="color:#8a97b8;font-size:13px;">{{ t.yourSeat }}</span><span style="font-family:'Chakra Petch',sans-serif;font-weight:600;">{{ seatZone }} · {{ seatCode }}</span></div>
+        <div style="display:flex;justify-content:space-between;"><span style="color:#8a97b8;font-size:13px;">{{ t.total }}</span><span style="font-family:'Chakra Petch',sans-serif;font-weight:700;">{{ lastTotalFmt }}</span></div>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:#f0f;border:1px solid rgba(240,0,255,.4);border-radius:999px;padding:6px 14px;">◈ {{ t.eta }}</div>
+      <button onClick="{{ reset }}" style="margin-top:30px;background:transparent;border:1px solid rgba(34,211,238,.5);color:#22d3ee;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;letter-spacing:.06em;padding:13px 28px;border-radius:12px;cursor:pointer;">{{ t.newOrder }}</button>
+    </div>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:500,&quot;height&quot;:960},&quot;defaultLang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;es&quot;,&quot;en&quot;],&quot;default&quot;:&quot;es&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Idioma&quot;},&quot;showFeatured&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Contenido&quot;},&quot;showTip&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Contenido&quot;}}">
+class Component extends DCLogic {
+  state = { lang:'es', cart:{}, view:'menu', notes:'', tip:0, orderNum:'', lastTotal:0, seat:{code:'A12',zoneKey:'A'} };
+
+  data = [
+    { id:'dc', es:'Bebidas frías', en:'Cold drinks', items:[
+      { id:'rb', name:'Red Bull 250ml', price:3.50, d_es:'Energía clásica', d_en:'Classic energy boost' },
+      { id:'mo', name:'Monster Ultra', price:3.80, d_es:'Ligera, cero azúcar', d_en:'Light, zero sugar', tag:true, t_es:'Popular', t_en:'Popular' },
+      { id:'cz', name:'Coca-Cola Zero', price:2.50, d_es:'Bien fría', d_en:'Served ice cold' },
+      { id:'aq', name:'Aquarius Limón', price:2.80, d_es:'Hidratación entre partidas', d_en:'Between-match hydration' },
+      { id:'nt', name:'Nestea', price:2.80, d_es:'Té frío al limón', d_en:'Lemon iced tea' },
+    ]},
+    { id:'ht', es:'Cafés y calientes', en:'Hot drinks', items:[
+      { id:'es', name:'Espresso Doble', price:2.00, d_es:'Un buen chute de foco', d_en:'A solid focus kick', tag:true, t_es:'Focus', t_en:'Focus' },
+      { id:'cl', name:'Café con Leche', price:2.20, d_es:'Suave y cremoso', d_en:'Smooth & creamy' },
+      { id:'ch', name:'Chocolate Caliente', price:3.00, d_es:'Reconfortante', d_en:'Comforting classic' },
+    ]},
+    { id:'sn', es:'Snacks', en:'Snacks', items:[
+      { id:'na', name:'Nachos con Queso', price:5.50, d_es:'Para compartir en el squad', d_en:'To share with the squad', tag:true, t_es:'Top', t_en:'Top' },
+      { id:'al', name:'Alitas BBQ (6 uds)', price:6.90, d_es:'Con salsa BBQ', d_en:'BBQ glazed' },
+      { id:'pd', name:'Patatas Deluxe', price:4.50, d_es:'Extra crujientes', d_en:'Extra crispy' },
+      { id:'dr', name:'Doritos', price:2.20, d_es:'Snack rápido', d_en:'Quick bite' },
+    ]},
+    { id:'br', es:'Cervezas', en:'Beers', items:[
+      { id:'ee', name:'Estrella Galicia', price:3.50, d_es:'Lager 33cl', d_en:'Lager 33cl' },
+      { id:'ip', name:'IPA Artesana', price:4.50, d_es:'Lúpulo intenso', d_en:'Bold, hoppy' },
+      { id:'rd', name:'Radler', price:3.20, d_es:'Cerveza con limón', d_en:'Beer & lemon shandy' },
+    ]},
+  ];
+  feat = { id:'combo', name:'Combo Respawn', price:8.50, d_es:'Red Bull + Nachos con queso', d_en:'Red Bull + Cheese nachos', s_es:'Ahorra 0,50 €', s_en:'Save €0.50' };
+
+  componentDidMount(){
+    const idx={}; this.data.forEach(c=>c.items.forEach(i=>idx[i.id]=i)); idx[this.feat.id]=this.feat; this.idx=idx;
+    const params=new URLSearchParams(window.location.search);
+    const code=(params.get('asiento')||params.get('seat')||'A12').toUpperCase();
+    const dl=this.props.defaultLang;
+    this.setState({ lang: dl==='en'?'en':'es', seat:{code, zoneKey:code.charAt(0)} });
+  }
+
+  add(id){ this.setState(s=>({ cart:{...s.cart,[id]:(s.cart[id]||0)+1} })); }
+  inc(id){ this.add(id); }
+  dec(id){ this.setState(s=>{ const c={...s.cart}; const q=(c[id]||0)-1; if(q<=0) delete c[id]; else c[id]=q; return {cart:c}; }); }
+  toggleLang(){ this.setState(s=>({lang:s.lang==='es'?'en':'es'})); }
+  zone(){ const m={ A:{es:'Zona PC',en:'PC Zone'}, C:{es:'Consolas',en:'Consoles'}, S:{es:'Simuladores',en:'Sim Racing'}, V:{es:'Sala VIP',en:'VIP Room'}, T:{es:'Arena Torneos',en:'Tournament Arena'} }; return m[this.state.seat.zoneKey]||m.A; }
+  totals(){ const c=this.state.cart, ix=this.idx||{}; let n=0,sub=0; for(const k in c){ n+=c[k]; sub+=c[k]*((ix[k]||{}).price||0);} const tip=this.showTip()?this.state.tip:0; return {n,sub,tip,total:sub+tip}; }
+  showTip(){ return this.props.showTip!==false; }
+  submit(){ const tt=this.totals(); if(tt.n===0) return; const num='UNTTS-'+Math.floor(100+Math.random()*900); this.setState({ view:'done', orderNum:num, lastTotal:tt.total }); }
+  reset(){ this.setState({ cart:{}, notes:'', tip:0, view:'menu', orderNum:'', lastTotal:0 }); }
+
+  renderVals(){
+    const lang=this.state.lang, ix=this.idx||{};
+    const eur=(v)=>v.toFixed(2)+' €';
+    const S={ es:{yourSeat:'Tu asiento',delivered:'servido en tu puesto',scanned:'QR escaneado',featured:'Destacado',viewOrder:'Ver pedido',addMore:'Añade a tu pedido',yourOrder:'Tu pedido',emptyCart:'Tu pedido está vacío',notes:'Notas para la barra',notesPh:'Sin hielo, poco picante…',tip:'Propina',subtotal:'Subtotal',total:'Total',sendToBar:'Enviar a la barra',sent:'¡Pedido enviado!',sentDesc:'La barra lo está preparando y el staff lo llevará a tu puesto.',orderNo:'Nº de pedido',eta:'Llega en ~8–12 min',newOrder:'Nuevo pedido',noTip:'Sin propina'},
+              en:{yourSeat:'Your seat',delivered:'delivered to your seat',scanned:'QR scanned',featured:'Featured',viewOrder:'View order',addMore:'Add to your order',yourOrder:'Your order',emptyCart:'Your order is empty',notes:'Notes for the bar',notesPh:'No ice, mild spice…',tip:'Tip',subtotal:'Subtotal',total:'Total',sendToBar:'Send to the bar',sent:'Order sent!',sentDesc:'The bar is preparing it and staff will bring it to your seat.',orderNo:'Order no.',eta:'Arrives in ~8–12 min',newOrder:'New order',noTip:'No tip'} };
+    const t=S[lang];
+    const cats=this.data.map(c=>({ id:c.id, label:c[lang], items:c.items.map(i=>({ id:i.id, name:i.name, priceFmt:eur(i.price), desc:i['d_'+lang], hasTag:!!i.tag, tag:i.tag?i['t_'+lang]:'', onAdd:()=>this.add(i.id) })) }));
+    const f=this.feat;
+    const tt=this.totals();
+    const cartItems=Object.keys(this.state.cart).map(id=>{ const it=ix[id]||{}; const qty=this.state.cart[id]; return { id, name:it.name, qty, priceFmt:eur(it.price||0), lineFmt:eur((it.price||0)*qty), inc:()=>this.inc(id), dec:()=>this.dec(id) }; });
+    const tipVals=[0,0.5,1,2];
+    const tipBase="flex:1;padding:10px 0;border-radius:10px;cursor:pointer;font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:13px;";
+    const tipOpts=tipVals.map(v=>{ const sel=this.state.tip===v; const style=tipBase+(sel?'background:#22d3ee;border:1px solid #22d3ee;color:#04121a;':'background:#0f1020;border:1px solid rgba(34,211,238,.25);color:#e6f0ff;'); return { label: v===0?t.noTip:eur(v), onSelect:()=>this.setState({tip:v}), style }; });
+    const z=this.zone();
+    return {
+      lang, t, otherLang: lang==='es'?'EN':'ES', toggleLang:()=>this.toggleLang(),
+      seatZone:z[lang], seatCode:this.state.seat.code,
+      showFeatured: this.props.showFeatured!==false, showTip:this.showTip(),
+      isMenu:this.state.view==='menu', isCart:this.state.view==='cart', isDone:this.state.view==='done',
+      openCart:()=>this.setState({view:'cart'}), backToMenu:()=>this.setState({view:'menu'}),
+      submit:()=>this.submit(), reset:()=>this.reset(),
+      notes:this.state.notes, setNotes:(e)=>this.setState({notes:e.target.value}),
+      tipOpts,
+      cats, feat:{ name:f.name, desc:f['d_'+lang], save:f['s_'+lang], priceFmt:eur(f.price), onAdd:()=>this.add(f.id) },
+      cart:{ count:tt.n, empty:tt.n===0, has:tt.n>0, items:cartItems, subFmt:eur(tt.sub), tipFmt:eur(tt.tip), hasTip:tt.tip>0, totalFmt:eur(tt.total) },
+      orderNum:this.state.orderNum, lastTotalFmt:eur(this.state.lastTotal),
+    };
+  }
+}
+</script>
+</body>
+</html>

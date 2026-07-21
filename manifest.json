@@ -56,6 +56,15 @@
       "archived": false
     },
     {
+      "slug": "gambit",
+      "name": "Gambit Café",
+      "tagline": "",
+      "location": "",
+      "ownData": false,
+      "updated": null,
+      "archived": false
+    },
+    {
       "slug": "heladeria-playa-san-juan",
       "name": "Heladeria Playa San Juan",
       "tagline": "Copas de helado, batidos, granizados y desayunos frente al mar",
@@ -88,7 +97,7 @@
       "tagline": "Marisqueria y cocina clasica con producto fresco",
       "location": "Barcelona",
       "ownData": true,
-      "updated": "2026-02-16",
+      "updated": "2026-07-21",
       "archived": false
     },
     {
@@ -116,6 +125,15 @@
       "location": "",
       "ownData": false,
       "updated": "2026-02-10",
+      "archived": false
+    },
+    {
+      "slug": "untts-gaming",
+      "name": "UNTTS Gaming",
+      "tagline": "",
+      "location": "",
+      "ownData": false,
+      "updated": null,
       "archived": false
     }
   ]

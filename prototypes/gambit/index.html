@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+<meta charset="utf-8">
+<title>Gambit Café - Menú gamificado</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:#0b0a07;font-family:'Manrope',sans-serif}
+  a{color:#C9A15A;text-decoration:none}
+  a:hover{color:#E4C583}
+  ::-webkit-scrollbar{width:0;height:0}
+  @keyframes gfade{from{opacity:0}to{opacity:1}}
+  @keyframes gpop{from{opacity:0;transform:scale(.9) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+  @keyframes gup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes gcheck{0%{transform:scale(0)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+</style>
+</helmet>
+<div style="width:390px;height:844px;margin:0 auto;background:#14110C;color:#EFE7D6;position:relative;overflow:hidden;display:flex;flex-direction:column;font-family:'Manrope',sans-serif;box-shadow:0 40px 120px rgba(0,0,0,.6)">
+
+  <div style="flex:0 0 auto;padding:14px 18px 12px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#1a160f,#14110C);border-bottom:1px solid rgba(230,220,200,.09);z-index:5">
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <div style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:18px;letter-spacing:.14em;line-height:1.05;white-space:nowrap">GAMBIT<span style="color:#C9A15A"> CAFÉ</span></div>
+      <div style="font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:.22em;color:#8f8674;text-transform:uppercase">{{ ui.mesa }} · Barco 26</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;align-items:center;gap:5px;background:rgba(201,161,90,.13);border:1px solid rgba(201,161,90,.35);color:#E4C583;padding:5px 9px;border-radius:999px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700">♟ {{ pointsLabel }}</div>
+      <button onClick="{{ toggleLang }}" style="background:none;border:1px solid rgba(230,220,200,.22);color:#EFE7D6;padding:5px 8px;border-radius:8px;font-family:'Space Mono',monospace;font-size:10.5px;font-weight:700;cursor:pointer">{{ otherLang }}</button>
+    </div>
+  </div>
+
+  <div style="flex:1 1 auto;overflow-y:auto;position:relative">
+
+    <sc-if value="{{ isMenu }}" hint-placeholder-val="{{ true }}">
+    <div style="animation:gfade .3s ease">
+      <div style="position:relative;padding:22px 18px 16px;overflow:hidden">
+        <div style="position:absolute;right:-8px;top:-18px;font-size:120px;line-height:1;color:rgba(201,161,90,.06);pointer-events:none">♞</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;color:#C9A15A;text-transform:uppercase">{{ ui.welcomeLine }} {{ tableNo }}</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:29px;font-weight:600;line-height:1.05;margin-top:4px">{{ ui.openingLine }}</div>
+      </div>
+
+      <div onClick="{{ goRewards }}" style="margin:0 18px 18px;padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,#20362a,#182018);border:1px solid rgba(134,169,78,.3);cursor:pointer;position:relative;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div style="font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#9fc06a;text-transform:uppercase">{{ ui.tierWord }} · {{ tierName }}</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;margin-top:2px">{{ pointsLabel }}</div>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:#E4C583">{{ ui.viewRewards }}</div>
+        </div>
+        <div style="height:6px;border-radius:999px;background:rgba(255,255,255,.08);margin-top:10px;overflow:hidden">
+          <div style="height:100%;background:linear-gradient(90deg,#86A94E,#c9d98a);border-radius:999px;width:{{ tierPct }}%"></div>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:9px;color:#8ea36a;margin-top:6px">{{ tierHint }}</div>
+      </div>
+
+      <div style="display:flex;gap:8px;overflow-x:auto;padding:0 18px 14px">
+        <sc-for list="{{ cats }}" as="c" hint-placeholder-count="6">
+          <button onClick="{{ c.onSelect }}" style="flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:8px 13px;border-radius:999px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif">
+            <span style="font-size:14px">{{ c.glyph }}</span>{{ c.label }}
+          </button>
+        </sc-for>
+      </div>
+
+      <div style="padding:0 18px 4px;display:flex;align-items:baseline;gap:8px">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600">{{ activeCatLabel }}</div>
+        <div style="flex:1;height:1px;background:rgba(230,220,200,.12)"></div>
+      </div>
+
+      <sc-if value="{{ isGame }}" hint-placeholder-val="{{ false }}">
+        <div style="margin:12px 18px 4px;padding:12px 14px;border-radius:12px;background:rgba(201,161,90,.08);border:1px dashed rgba(201,161,90,.4);font-size:12px;color:#d8cbaa;line-height:1.5">♞ {{ ui.gameCombo }}</div>
+      </sc-if>
+
+      <div style="padding:10px 18px 24px;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ items }}" as="it" hint-placeholder-count="4">
+          <div style="border-radius:16px;background:#1d1912;border:1px solid rgba(230,220,200,.08);overflow:hidden;animation:gup .3s ease">
+            <div onClick="{{ it.onOpen }}" style="padding:14px 15px;cursor:pointer">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+                <div style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;line-height:1.1;color:#F3ECDC">{{ it.name }}</div>
+                <div style="font-family:'Space Mono',monospace;font-size:13.5px;font-weight:700;color:#E4C583;white-space:nowrap">{{ it.priceLabel }}</div>
+              </div>
+              <sc-if value="{{ it.hasDesc }}" hint-placeholder-val="{{ true }}">
+                <div style="font-size:12.5px;color:#a89e8a;line-height:1.45;margin-top:5px">{{ it.desc }}</div>
+              </sc-if>
+              <sc-if value="{{ it.hasAll }}" hint-placeholder-val="{{ false }}">
+                <div style="font-family:'Space Mono',monospace;font-size:9px;color:#7d7461;letter-spacing:.04em;margin-top:7px;text-transform:uppercase">{{ it.allLabel }}</div>
+              </sc-if>
+            </div>
+            <div style="padding:0 15px 13px;display:flex;justify-content:flex-end">
+              <sc-if value="{{ it.inCart }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:12px;background:#14110C;border:1px solid rgba(201,161,90,.4);border-radius:999px;padding:4px 6px">
+                  <button onClick="{{ it.onDec }}" style="width:28px;height:28px;border-radius:999px;border:none;background:rgba(230,220,200,.1);color:#EFE7D6;font-size:17px;cursor:pointer;line-height:1">−</button>
+                  <span style="font-family:'Space Mono',monospace;font-weight:700;min-width:14px;text-align:center">{{ it.qty }}</span>
+                  <button onClick="{{ it.onAdd }}" style="width:28px;height:28px;border-radius:999px;border:none;background:#C9A15A;color:#14110C;font-size:17px;cursor:pointer;line-height:1;font-weight:700">+</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ it.notInCart }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ it.onAdd }}" style="background:#C9A15A;color:#14110C;border:none;padding:8px 18px;border-radius:999px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:'Manrope',sans-serif">+ {{ ui.add }}</button>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="padding:0 18px 30px">
+        <button onClick="{{ callWaiter }}" style="width:100%;background:none;border:1px solid rgba(230,220,200,.18);color:#a89e8a;padding:12px;border-radius:12px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif">🛎 {{ ui.callWaiter }}</button>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isRewards }}" hint-placeholder-val="{{ false }}">
+    <div style="animation:gfade .3s ease;padding:22px 18px 30px">
+      <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;color:#C9A15A;text-transform:uppercase">{{ ui.rewardsKicker }}</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:29px;font-weight:600;line-height:1.05;margin-top:4px">{{ ui.rewardsTitle }}</div>
+
+      <div style="margin-top:16px;padding:18px;border-radius:18px;background:linear-gradient(135deg,#20362a,#161d16);border:1px solid rgba(134,169,78,.3);text-align:center">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;color:#9fc06a;text-transform:uppercase">{{ ui.balanceWord }} · {{ tierName }}</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:46px;font-weight:700;line-height:1;margin:6px 0 2px">{{ points }}</div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;color:#8ea36a">{{ ui.pointsWord }}</div>
+        <div style="height:6px;border-radius:999px;background:rgba(255,255,255,.08);margin-top:14px;overflow:hidden">
+          <div style="height:100%;background:linear-gradient(90deg,#86A94E,#c9d98a);border-radius:999px;width:{{ tierPct }}%"></div>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:9px;color:#8ea36a;margin-top:6px">{{ tierHint }}</div>
+      </div>
+
+      <div style="margin-top:14px;font-size:12.5px;color:#a89e8a;line-height:1.55">{{ ui.rewardsIntro }}</div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
+        <sc-for list="{{ rewards }}" as="r" hint-placeholder-count="4">
+          <div style="border-radius:16px;background:#1d1912;border:1px solid {{ r.border }};padding:15px;position:relative;overflow:hidden">
+            <div style="position:absolute;right:-6px;bottom:-14px;font-size:70px;line-height:1;color:rgba(201,161,90,.06)">♛</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+              <div style="flex:1">
+                <div style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:#F3ECDC;line-height:1.1">{{ r.title }}</div>
+                <div style="font-size:12px;color:#a89e8a;line-height:1.45;margin-top:4px">{{ r.desc }}</div>
+              </div>
+              <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#E4C583;white-space:nowrap">{{ r.costLabel }}</div>
+            </div>
+            <div style="margin-top:12px">
+              <sc-if value="{{ r.claimedBool }}" hint-placeholder-val="{{ false }}">
+                <div style="background:rgba(134,169,78,.15);border:1px solid rgba(134,169,78,.4);color:#9fc06a;padding:9px;border-radius:10px;text-align:center;font-weight:700;font-size:12.5px">✓ {{ ui.claimed }}</div>
+              </sc-if>
+              <sc-if value="{{ r.canClaim }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ r.onClaim }}" style="width:100%;background:linear-gradient(90deg,#C9A15A,#E4C583);color:#14110C;border:none;padding:10px;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;font-family:'Manrope',sans-serif">♞ {{ ui.claim }}</button>
+              </sc-if>
+              <sc-if value="{{ r.locked }}" hint-placeholder-val="{{ false }}">
+                <div style="background:rgba(230,220,200,.05);border:1px solid rgba(230,220,200,.12);color:#7d7461;padding:9px;border-radius:10px;text-align:center;font-size:12px">🔒 {{ r.missingLabel }}</div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="margin-top:18px;padding:14px;border-radius:14px;border:1px solid rgba(230,220,200,.1);background:rgba(230,220,200,.03);font-size:11px;color:#8f8674;line-height:1.5;text-align:center">{{ ui.partnersNote }}</div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isCart }}" hint-placeholder-val="{{ false }}">
+    <div style="animation:gfade .3s ease;padding:22px 18px 30px">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:29px;font-weight:600">{{ ui.cartTitle }}</div>
+      <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ true }}">
+        <div style="text-align:center;padding:60px 20px;color:#8f8674">
+          <div style="font-size:60px;color:rgba(201,161,90,.25)">♟</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#c8bfa9;margin-top:10px">{{ ui.emptyTitle }}</div>
+          <div style="font-size:12.5px;margin-top:6px;line-height:1.5">{{ ui.emptyDesc }}</div>
+          <button onClick="{{ goMenu }}" style="margin-top:18px;background:#C9A15A;color:#14110C;border:none;padding:11px 22px;border-radius:999px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif">{{ ui.backToMenu }}</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ cartHas }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px">
+          <sc-for list="{{ cartLines }}" as="l" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:14px;background:#1d1912;border:1px solid rgba(230,220,200,.08)">
+              <div style="flex:1">
+                <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:#F3ECDC">{{ l.name }}</div>
+                <div style="font-family:'Space Mono',monospace;font-size:11px;color:#8f8674;margin-top:2px">{{ l.unitLabel }}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;background:#14110C;border:1px solid rgba(201,161,90,.35);border-radius:999px;padding:3px 5px">
+                <button onClick="{{ l.onDec }}" style="width:26px;height:26px;border-radius:999px;border:none;background:rgba(230,220,200,.1);color:#EFE7D6;font-size:16px;cursor:pointer">−</button>
+                <span style="font-family:'Space Mono',monospace;font-weight:700;min-width:14px;text-align:center;font-size:13px">{{ l.qty }}</span>
+                <button onClick="{{ l.onInc }}" style="width:26px;height:26px;border-radius:999px;border:none;background:#C9A15A;color:#14110C;font-size:16px;cursor:pointer;font-weight:700">+</button>
+              </div>
+              <div style="font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:#E4C583;min-width:56px;text-align:right">{{ l.priceLabel }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top:18px;padding:16px;border-radius:16px;background:#1d1912;border:1px solid rgba(230,220,200,.08)">
+          <div style="display:flex;justify-content:space-between;font-size:14px;color:#c8bfa9"><span>{{ ui.totalWord }}</span><span style="font-family:'Space Mono',monospace;font-weight:700;font-size:18px;color:#F3ECDC">{{ cartTotalLabel }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#9fc06a;margin-top:8px"><span>♟ {{ ui.earnWord }}</span><span style="font-family:'Space Mono',monospace;font-weight:700">+{{ pointsToEarn }} pts</span></div>
+        </div>
+        <button onClick="{{ goCheckout }}" style="width:100%;margin-top:16px;background:linear-gradient(90deg,#C9A15A,#E4C583);color:#14110C;border:none;padding:15px;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;font-family:'Manrope',sans-serif">{{ ui.goPay }} · {{ cartTotalLabel }}</button>
+      </sc-if>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ false }}">
+    <div style="animation:gfade .3s ease;padding:22px 18px 30px">
+      <button onClick="{{ goCart }}" style="background:none;border:none;color:#a89e8a;font-size:13px;cursor:pointer;padding:0;margin-bottom:8px;font-family:'Manrope',sans-serif">← {{ ui.back }}</button>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:29px;font-weight:600">{{ ui.checkoutTitle }}</div>
+
+      <div style="margin-top:16px;padding:16px;border-radius:16px;background:#1d1912;border:1px solid rgba(230,220,200,.08)">
+        <sc-for list="{{ cartLines }}" as="l" hint-placeholder-count="3">
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#c8bfa9;padding:5px 0"><span>{{ l.qty }}× {{ l.name }}</span><span style="font-family:'Space Mono',monospace;color:#d8cbaa">{{ l.priceLabel }}</span></div>
+        </sc-for>
+        <div style="height:1px;background:rgba(230,220,200,.1);margin:10px 0"></div>
+        <div style="display:flex;justify-content:space-between;font-size:15px;font-weight:700"><span>{{ ui.totalWord }}</span><span style="font-family:'Space Mono',monospace;color:#E4C583">{{ cartTotalLabel }}</span></div>
+      </div>
+
+      <div style="margin-top:16px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;color:#8f8674;text-transform:uppercase">{{ ui.cardSection }}</div>
+      <div style="margin-top:10px;padding:18px;border-radius:16px;background:linear-gradient(135deg,#26201780,#1a160f);border:1px solid rgba(201,161,90,.25)">
+        <input placeholder="{{ ui.cardName }}" style="width:100%;background:#14110C;border:1px solid rgba(230,220,200,.14);border-radius:10px;padding:12px;color:#EFE7D6;font-size:13px;font-family:'Manrope',sans-serif;margin-bottom:10px" />
+        <input placeholder="0000 0000 0000 0000" inputmode="numeric" style="width:100%;background:#14110C;border:1px solid rgba(230,220,200,.14);border-radius:10px;padding:12px;color:#EFE7D6;font-size:13px;font-family:'Space Mono',monospace;letter-spacing:.1em;margin-bottom:10px" />
+        <div style="display:flex;gap:10px">
+          <input placeholder="{{ ui.expPh }}" style="flex:1;background:#14110C;border:1px solid rgba(230,220,200,.14);border-radius:10px;padding:12px;color:#EFE7D6;font-size:13px;font-family:'Space Mono',monospace" />
+          <input placeholder="CVV" inputmode="numeric" style="flex:1;background:#14110C;border:1px solid rgba(230,220,200,.14);border-radius:10px;padding:12px;color:#EFE7D6;font-size:13px;font-family:'Space Mono',monospace" />
+        </div>
+      </div>
+
+      <button onClick="{{ pay }}" style="width:100%;margin-top:18px;background:linear-gradient(90deg,#C9A15A,#E4C583);color:#14110C;border:none;padding:15px;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;font-family:'Manrope',sans-serif">{{ ui.payWord }} {{ cartTotalLabel }}</button>
+      <div style="text-align:center;font-size:10.5px;color:#7d7461;margin-top:10px;font-family:'Space Mono',monospace">🔒 {{ ui.demoPay }}</div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isConfirm }}" hint-placeholder-val="{{ false }}">
+    <div style="animation:gfade .3s ease;padding:40px 22px;text-align:center;display:flex;flex-direction:column;align-items:center;min-height:100%">
+      <div style="width:84px;height:84px;border-radius:999px;background:linear-gradient(135deg,#86A94E,#c9d98a);display:flex;align-items:center;justify-content:center;font-size:44px;color:#14110C;animation:gcheck .5s ease">✓</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;margin-top:20px;line-height:1.1">{{ ui.sentTitle }}</div>
+      <div style="font-size:13px;color:#a89e8a;margin-top:8px;line-height:1.5;max-width:280px">{{ ui.sentDesc }}</div>
+
+      <div style="width:100%;margin-top:24px;padding:18px;border-radius:16px;background:#1d1912;border:1px solid rgba(230,220,200,.08)">
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#c8bfa9;padding:4px 0"><span>{{ ui.orderTotal }}</span><span style="font-family:'Space Mono',monospace">{{ lastTotal }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#9fc06a;padding:4px 0"><span>♟ {{ ui.earnedWord }}</span><span style="font-family:'Space Mono',monospace;font-weight:700">+{{ lastEarned }} pts</span></div>
+        <div style="height:1px;background:rgba(230,220,200,.1);margin:8px 0"></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700"><span>{{ ui.balanceWord }}</span><span style="font-family:'Space Mono',monospace;color:#E4C583">{{ lastBalance }} pts</span></div>
+      </div>
+
+      <button onClick="{{ goRewards }}" style="width:100%;margin-top:20px;background:linear-gradient(90deg,#86A94E,#a8c96a);color:#14110C;border:none;padding:14px;border-radius:14px;font-weight:700;font-size:14px;cursor:pointer;font-family:'Manrope',sans-serif">♞ {{ ui.seeRewards }}</button>
+      <button onClick="{{ goMenu }}" style="width:100%;margin-top:10px;background:none;border:1px solid rgba(230,220,200,.18);color:#c8bfa9;padding:13px;border-radius:14px;font-weight:600;font-size:13.5px;cursor:pointer;font-family:'Manrope',sans-serif">{{ ui.keepOrdering }}</button>
+    </div>
+    </sc-if>
+
+  </div>
+
+  <div style="flex:0 0 auto;display:flex;background:#17130C;border-top:1px solid rgba(230,220,200,.09);z-index:5">
+    <button onClick="{{ goMenu }}" style="flex:1;background:none;border:none;padding:11px 0 14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:{{ navMenuColor }};font-family:'Manrope',sans-serif">
+      <span style="font-size:19px">♟</span><span style="font-size:10.5px;font-weight:600">{{ ui.navMenu }}</span>
+    </button>
+    <button onClick="{{ goRewards }}" style="flex:1;background:none;border:none;padding:11px 0 14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:{{ navRewardsColor }};font-family:'Manrope',sans-serif">
+      <span style="font-size:19px">♞</span><span style="font-size:10.5px;font-weight:600">{{ ui.navRewards }}</span>
+    </button>
+    <button onClick="{{ goCart }}" style="flex:1;background:none;border:none;padding:11px 0 14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:{{ navCartColor }};position:relative;font-family:'Manrope',sans-serif">
+      <span style="font-size:19px">♜</span><span style="font-size:10.5px;font-weight:600">{{ ui.navCart }}</span>
+      <sc-if value="{{ cartHasItems }}" hint-placeholder-val="{{ false }}">
+        <span style="position:absolute;top:6px;right:calc(50% - 22px);background:#C9A15A;color:#14110C;font-size:9.5px;font-weight:700;min-width:16px;height:16px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;padding:0 3px">{{ cartCount }}</span>
+      </sc-if>
+    </button>
+  </div>
+
+  <sc-if value="{{ showDetail }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeDetail }}" style="position:absolute;inset:0;background:rgba(8,7,4,.72);z-index:20;display:flex;align-items:flex-end;animation:gfade .2s ease">
+      <div onClick="{{ stop }}" style="width:100%;background:#1a160f;border-top-left-radius:24px;border-top-right-radius:24px;border-top:1px solid rgba(201,161,90,.25);padding:8px 20px 26px;animation:gpop .3s ease;max-height:88%;overflow-y:auto">
+        <div style="width:38px;height:4px;border-radius:999px;background:rgba(230,220,200,.2);margin:6px auto 16px"></div>
+        <div style="font-size:64px;text-align:center;color:rgba(201,161,90,.35);line-height:1">{{ detail.glyph }}</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:8px">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;line-height:1.05">{{ detail.name }}</div>
+          <div style="font-family:'Space Mono',monospace;font-size:17px;font-weight:700;color:#E4C583;white-space:nowrap">{{ detail.priceLabel }}</div>
+        </div>
+        <sc-if value="{{ detail.hasDesc }}" hint-placeholder-val="{{ true }}">
+          <div style="font-size:14px;color:#b6ac96;line-height:1.55;margin-top:10px">{{ detail.desc }}</div>
+        </sc-if>
+        <sc-if value="{{ detail.hasAll }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:14px;padding:10px 12px;border-radius:10px;background:rgba(201,80,60,.08);border:1px solid rgba(201,80,60,.2);font-size:11px;color:#d4a99a;font-family:'Space Mono',monospace;line-height:1.4">⚠ {{ detail.allLabel }}</div>
+        </sc-if>
+        <button onClick="{{ detail.onAdd }}" style="width:100%;margin-top:20px;background:linear-gradient(90deg,#C9A15A,#E4C583);color:#14110C;border:none;padding:15px;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;font-family:'Manrope',sans-serif">+ {{ ui.add }} · {{ detail.priceLabel }}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showPuzzle }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closePuzzle }}" style="position:absolute;inset:0;background:rgba(8,7,4,.82);z-index:30;display:flex;align-items:center;justify-content:center;padding:20px;animation:gfade .2s ease">
+      <div onClick="{{ stop }}" style="width:100%;background:#1a160f;border-radius:22px;border:1px solid rgba(201,161,90,.3);padding:22px;animation:gpop .3s ease">
+        <div style="text-align:center">
+          <div style="font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:.2em;color:#C9A15A;text-transform:uppercase">{{ ui.puzzleKicker }}</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;margin-top:4px;line-height:1.15">{{ puzzle.prompt }}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(8,1fr);width:264px;margin:16px auto 4px;border-radius:6px;overflow:hidden;border:2px solid #2a2318;box-shadow:0 12px 30px rgba(0,0,0,.5)">
+          <sc-for list="{{ puzzle.squares }}" as="sq" hint-placeholder-count="64">
+            <div style="aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1;background:{{ sq.bg }};color:{{ sq.fg }};text-shadow:0 1px 1px rgba(0,0,0,.25)">{{ sq.glyph }}</div>
+          </sc-for>
+        </div>
+        <div style="text-align:center;font-family:'Space Mono',monospace;font-size:10px;color:#8f8674;margin-top:8px">{{ ui.pickMove }}</div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <sc-for list="{{ puzzle.options }}" as="o" hint-placeholder-count="3">
+            <button onClick="{{ o.onPick }}" style="flex:1;background:#14110C;border:1px solid rgba(201,161,90,.35);color:#F3ECDC;padding:13px 6px;border-radius:12px;font-family:'Space Mono',monospace;font-weight:700;font-size:15px;cursor:pointer">{{ o.label }}</button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ puzzleWrong }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:12px;text-align:center;font-size:12px;color:#d4a99a">✗ {{ ui.puzzleWrong }}</div>
+        </sc-if>
+        <button onClick="{{ closePuzzle }}" style="width:100%;margin-top:14px;background:none;border:none;color:#7d7461;font-size:12px;cursor:pointer;font-family:'Manrope',sans-serif">{{ ui.close }}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showClaimed }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeClaimed }}" style="position:absolute;inset:0;background:rgba(8,7,4,.85);z-index:40;display:flex;align-items:center;justify-content:center;padding:20px;animation:gfade .2s ease">
+      <div onClick="{{ stop }}" style="width:100%;background:linear-gradient(160deg,#20362a,#161d16);border-radius:22px;border:1px solid rgba(134,169,78,.4);padding:26px 22px;text-align:center;animation:gpop .3s ease">
+        <div style="width:72px;height:72px;border-radius:999px;background:linear-gradient(135deg,#86A94E,#c9d98a);display:flex;align-items:center;justify-content:center;font-size:38px;color:#14110C;margin:0 auto;animation:gcheck .5s ease">♛</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;margin-top:16px;line-height:1.1">{{ ui.checkmate }}</div>
+        <div style="font-size:14px;color:#c8d9a8;margin-top:6px">{{ claimedTitle }}</div>
+        <div style="margin-top:18px;font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#8ea36a;text-transform:uppercase">{{ ui.yourCode }}</div>
+        <div style="margin-top:8px;padding:14px;border-radius:12px;background:#0f0d08;border:1px dashed rgba(201,161,90,.5);font-family:'Space Mono',monospace;font-size:18px;font-weight:700;letter-spacing:.08em;color:#E4C583">{{ claimedCode }}</div>
+        <div style="font-size:11.5px;color:#8ea36a;margin-top:12px;line-height:1.5">{{ ui.redeemNote }}</div>
+        <button onClick="{{ closeClaimed }}" style="width:100%;margin-top:18px;background:#EFE7D6;color:#14110C;border:none;padding:13px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;font-family:'Manrope',sans-serif">{{ ui.gotIt }}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showWaiter }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;left:18px;right:18px;bottom:80px;z-index:50;background:#EFE7D6;color:#14110C;padding:13px 16px;border-radius:14px;font-size:13px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.4);animation:gup .3s ease;text-align:center">🛎 {{ ui.waiterMsg }}</div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    const dr=(id,cat,price,n,a)=>({id,cat,price,es:{n,d:'',a:a||''},en:{n,d:'',a:a||''}});
+    this.tableNo=7;
+    this.CATS=[
+      {id:'salado',g:'♟',es:'Salado',en:'Savoury'},
+      {id:'flatbreads',g:'♜',es:'Flat Breads',en:'Flat Breads'},
+      {id:'game',g:'♞',es:'Menú Game',en:'Game Menu'},
+      {id:'postres',g:'♝',es:'Postres',en:'Desserts'},
+      {id:'cafe',g:'♛',es:'Café',en:'Coffee'},
+      {id:'refrescos',g:'♙',es:'Refrescos',en:'Soft Drinks'},
+      {id:'cocteles',g:'♚',es:'Cócteles',en:'Cocktails'},
+      {id:'mocktails',g:'♘',es:'Mocktails',en:'Mocktails'},
+      {id:'cervezas',g:'♖',es:'Cervezas & Vinos',en:'Beer & Wine'}
+    ];
+    this.MENU=[
+      {id:'s1',cat:'salado',price:11,es:{n:'Peones Crujientes',d:'Bolitas de mozzarella con dip de miel picante y dukkah.',a:'Leche, Sésamo, Gluten, Huevo, Frutos secos'},en:{n:'Crunchy Pawns',d:'Mozzarella sticks with spicy honey dip and dukkah.',a:'Milk, Sesame, Gluten, Egg, Nuts'}},
+      {id:'s2',cat:'salado',price:14,es:{n:'El Enroque',d:'Tabla de quesos, membrillo, dátiles y pistachos.',a:'Leche, Gluten, Frutos secos'},en:{n:'The Castling',d:'Cheese board, quince, dates and pistachios.',a:'Milk, Gluten, Nuts'}},
+      {id:'s3',cat:'salado',price:11,es:{n:'Gambito de Patatas Persa',d:'Patatas especiadas con zaatar, yogur de limón y harissa suave.',a:'Leche, Sésamo'},en:{n:'Persian Potato Gambit',d:"Za'atar-spiced potatoes, lemon yoghurt and mild harissa.",a:'Milk, Sesame'}},
+      {id:'s4',cat:'salado',price:12,es:{n:'Defensa Siciliana',d:'Crudités, crackers y hummus de aceituna kalamata.',a:'Gluten, Sésamo'},en:{n:'Sicilian Defence',d:'Crudités, crackers and kalamata olive hummus.',a:'Gluten, Sesame'}},
+      {id:'s5',cat:'salado',price:12,es:{n:'Shatranj Ibérico',d:'Jamón ibérico, labneh, aceite ahumado y pan cristal.',a:'Leche, Gluten'},en:{n:'Iberian Shatranj',d:'Iberian ham, labneh, smoked oil and cristal bread.',a:'Milk, Gluten'}},
+      {id:'f1',cat:'flatbreads',price:17,es:{n:'El Califato',d:'Cordero especiado, tahini y cebolla encurtida.',a:'Gluten, Sésamo'},en:{n:'The Caliphate',d:'Spiced lamb, tahini and pickled onion.',a:'Gluten, Sesame'}},
+      {id:'f2',cat:'flatbreads',price:15,es:{n:'Torre Ibérica',d:'Pesto de pistacho, jamón ibérico, burrata y zaatar.',a:'Leche, Sésamo'},en:{n:'Iberian Rook',d:"Pistachio pesto, Iberian ham, burrata and za'atar.",a:'Milk, Sesame'}},
+      {id:'f3',cat:'flatbreads',price:14,es:{n:'Apertura Blanca',d:'Crema de feta, tomate cherry confitado, orégano y sésamo tostado.',a:'Leche, Sésamo'},en:{n:'White Opening',d:'Feta cream, confit cherry tomato, oregano and toasted sesame.',a:'Milk, Sesame'}},
+      {id:'f4',cat:'flatbreads',price:14,es:{n:'El Visir',d:'Crema de feta, tomate cherry confitado, orégano y sésamo tostado.',a:'Leche, Sésamo'},en:{n:'The Vizier',d:'Feta cream, confit cherry tomato, oregano and toasted sesame.',a:'Milk, Sesame'}},
+      {id:'g1',cat:'game',price:19,es:{n:'Menú Game',d:'1 Flat Bread + 1 bebida (refresco, cerveza, vino, té o café) + 1 partida de ajedrez incluida.',a:'Según el flat bread elegido'},en:{n:'Game Menu',d:'1 Flat Bread + 1 drink (soft drink, beer, wine, tea or coffee) + 1 chess game included.',a:'Depends on chosen flat bread'}},
+      {id:'p1',cat:'postres',price:8,es:{n:'Cheesecake',d:'Tarta de queso cremosa horneada.',a:'Leche, Gluten, Huevo'},en:{n:'Cheesecake',d:'Creamy baked cheesecake.',a:'Milk, Gluten, Egg'}},
+      {id:'p2',cat:'postres',price:7,es:{n:'Brownie',d:'Brownie de chocolate con nueces.',a:'Leche, Gluten, Huevo, Frutos secos'},en:{n:'Brownie',d:'Chocolate walnut brownie.',a:'Milk, Gluten, Egg, Nuts'}},
+      {id:'p3',cat:'postres',price:4.5,es:{n:'Cookies',d:'Galletas artesanas recién hechas.',a:'Leche, Gluten, Huevo'},en:{n:'Cookies',d:'Freshly baked homemade cookies.',a:'Milk, Gluten, Egg'}},
+      dr('c1','cafe',2.8,'Double Espresso'),
+      dr('c2','cafe',2.9,'Cortado','Leche'),
+      dr('c3','cafe',3.5,'Flat White','Leche'),
+      dr('c4','cafe',3.3,'Americano'),
+      dr('c5','cafe',3.3,'Capuccino','Leche'),
+      dr('c6','cafe',4.5,'Iced Latte','Leche'),
+      dr('c7','cafe',6.5,'Frappé','Leche'),
+      {id:'c8',cat:'cafe',price:5,es:{n:'Affogato',d:'Espresso sobre helado de vainilla.',a:'Leche'},en:{n:'Affogato',d:'Espresso over vanilla ice cream.',a:'Milk'}},
+      dr('rf1','refrescos',3.9,'Coca-Cola'),
+      dr('rf2','refrescos',3.9,'Coca-Cola Zero'),
+      dr('rf3','refrescos',3.9,'Fanta Naranja'),
+      dr('rf4','refrescos',3.9,'Fanta Limón'),
+      dr('rf5','refrescos',3.9,'Nestea'),
+      dr('rf6','refrescos',3,'Agua'),
+      dr('rf7','refrescos',3.5,'Agua con Gas'),
+      dr('rf8','refrescos',4.5,'Zumo Natural'),
+      dr('k1','cocteles',10,'Mojito'),
+      dr('k2','cocteles',10,'Margarita'),
+      dr('k3','cocteles',10,'Caipirinha'),
+      dr('k4','cocteles',10,'Negroni'),
+      dr('k5','cocteles',10,'Espresso Martini'),
+      dr('k6','cocteles',10,'Pornstar Martini'),
+      dr('k7','cocteles',10,'Whisky Sour'),
+      dr('k8','cocteles',10,'Paloma'),
+      dr('k9','cocteles',10,'Dry Martini'),
+      dr('k10','cocteles',10,'Pisco Sour'),
+      dr('k11','cocteles',9,'Petroni Spritz'),
+      dr('m1','mocktails',8,'Virgin Mojito'),
+      dr('m2','mocktails',8,'Nojito de Frutas'),
+      dr('b1','cervezas',4,'Caña Doble'),
+      dr('b2','cervezas',4.5,'Tercio'),
+      dr('b3','cervezas',4.5,'Mahou 00'),
+      dr('b4','cervezas',4.8,'Cerveza Sin Gluten'),
+      dr('b5','cervezas',5,'Vermut Rojo'),
+      dr('b6','cervezas',5,'Vermut Blanco'),
+      dr('b7','cervezas',4.5,'Alcorta Crianza · Rioja (copa)'),
+      dr('b8','cervezas',4,'Verdejo Rueda (copa)')
+    ];
+    this.GLYPH={salado:'♟',flatbreads:'♜',game:'♞',postres:'♝',cafe:'♛',refrescos:'♙',cocteles:'♚',mocktails:'♘',cervezas:'♖'};
+    this.TIERS=[{min:0,es:'Peón',en:'Pawn'},{min:500,es:'Alfil',en:'Bishop'},{min:1000,es:'Caballo',en:'Knight'},{min:1800,es:'Torre',en:'Rook'},{min:3000,es:'Dama',en:'Queen'},{min:5000,es:'Rey',en:'King'}];
+    this.REWARDS=[
+      {id:'diamond1',cost:300,es:{t:'Chess.com Diamond · 15% dto.',d:'Un mes de Diamond con 15% de descuento.'},en:{t:'Chess.com Diamond · 15% off',d:'One month of Diamond at 15% off.'}},
+      {id:'gold1',cost:600,es:{t:'1 mes Gold gratis',d:'Un mes de Chess.com Gold de cortesía.'},en:{t:'1 month Gold free',d:'One complimentary month of Chess.com Gold.'}},
+      {id:'gold3',cost:1200,es:{t:'3 meses Gold',d:'Tres meses de membresía Chess.com Gold.'},en:{t:'3 months Gold',d:'Three months of Chess.com Gold membership.'}},
+      {id:'diamondyr',cost:2500,es:{t:'1 año Diamond · −50%',d:'Un año completo de Diamond a mitad de precio.'},en:{t:'1 year Diamond · −50%',d:'A full year of Diamond at half price.'}}
+    ];
+    this.PUZZLES=[
+      {pos:{e1:'R',g1:'K',g8:'k',f7:'p',g7:'p',h7:'p'},options:[{es:'Te8#',en:'Re8#',c:true},{es:'Te7+',en:'Re7+',c:false},{es:'Rf2',en:'Kf2',c:false}]},
+      {pos:{f6:'K',g1:'Q',g8:'k'},options:[{es:'Dg7#',en:'Qg7#',c:true},{es:'Dg6+',en:'Qg6+',c:false},{es:'Rg6',en:'Kg6',c:false}]}
+    ];
+    this.STR={
+      es:{mesa:'Mesa',welcomeLine:'Bienvenido · Mesa',openingLine:'Elige tu apertura',add:'Añadir',allerg:'Alérgenos: ',
+        tierWord:'Rango',viewRewards:'Canjear →',gameCombo:'Menú Game: 1 flat bread + 1 bebida + 1 partida de ajedrez física incluida.',
+        callWaiter:'Llamar al camarero',rewardsKicker:'Recompensas',rewardsTitle:'Juega, consume, gana',balanceWord:'Tu saldo',pointsWord:'puntos Gambit',
+        rewardsIntro:'Cada € que consumes suma 10 puntos. Reúne los puntos y resuelve un puzzle de ajedrez para desbloquear tu recompensa Chess.com.',
+        claim:'Resolver puzzle y canjear',claimed:'Canjeado',partnersNote:'Recompensas en colaboración con Chess.com. Códigos canjeables en tu cuenta Chess.com.',
+        cartTitle:'Tu pedido',emptyTitle:'Tu tablero está vacío',emptyDesc:'Añade algo de la carta para empezar la partida.',backToMenu:'Ver la carta',
+        totalWord:'Total',earnWord:'Ganarás',goPay:'Ir a pagar',back:'Volver',checkoutTitle:'Pago',cardSection:'Datos de la tarjeta',
+        cardName:'Nombre en la tarjeta',expPh:'MM/AA',payWord:'Pagar',demoPay:'Pago simulado · demo',
+        sentTitle:'¡Pedido enviado a tu mesa!',sentDesc:'Tu pedido llegará a la Mesa 7 en unos minutos. Sigue con tu partida.',
+        orderTotal:'Total del pedido',earnedWord:'Puntos ganados',seeRewards:'Ver recompensas',keepOrdering:'Seguir pidiendo',
+        navMenu:'Carta',navRewards:'Recompensas',navCart:'Pedido',puzzleKicker:'Desbloquea tu recompensa',pickMove:'Blancas juegan · elige la jugada',
+        puzzleWrong:'No es mate. Piensa la jugada ganadora.',close:'Cancelar',checkmate:'¡Jaque mate!',yourCode:'Tu código',
+        redeemNote:'Introduce este código al suscribirte en chess.com. Válido 30 días.',gotIt:'¡Entendido!',waiterMsg:'Un camarero va hacia tu mesa'},
+      en:{mesa:'Table',welcomeLine:'Welcome · Table',openingLine:'Choose your opening',add:'Add',allerg:'Allergens: ',
+        tierWord:'Rank',viewRewards:'Redeem →',gameCombo:'Game Menu: 1 flat bread + 1 drink + 1 physical chess game included.',
+        callWaiter:'Call the waiter',rewardsKicker:'Rewards',rewardsTitle:'Play, spend, win',balanceWord:'Your balance',pointsWord:'Gambit points',
+        rewardsIntro:'Every € you spend earns 10 points. Collect points and solve a chess puzzle to unlock your Chess.com reward.',
+        claim:'Solve puzzle & redeem',claimed:'Redeemed',partnersNote:'Rewards in partnership with Chess.com. Codes redeemable in your Chess.com account.',
+        cartTitle:'Your order',emptyTitle:'Your board is empty',emptyDesc:'Add something from the menu to start the game.',backToMenu:'See the menu',
+        totalWord:'Total',earnWord:'You will earn',goPay:'Go to pay',back:'Back',checkoutTitle:'Payment',cardSection:'Card details',
+        cardName:'Name on card',expPh:'MM/YY',payWord:'Pay',demoPay:'Simulated payment · demo',
+        sentTitle:'Order sent to your table!',sentDesc:'Your order will reach Table 7 in a few minutes. Enjoy your game.',
+        orderTotal:'Order total',earnedWord:'Points earned',seeRewards:'See rewards',keepOrdering:'Keep ordering',
+        navMenu:'Menu',navRewards:'Rewards',navCart:'Order',puzzleKicker:'Unlock your reward',pickMove:'White to move · pick the move',
+        puzzleWrong:'Not mate. Find the winning move.',close:'Cancel',checkmate:'Checkmate!',yourCode:'Your code',
+        redeemNote:'Enter this code when subscribing on chess.com. Valid for 30 days.',gotIt:'Got it!',waiterMsg:'A waiter is on the way to your table'}
+    };
+    let saved={};
+    try{saved=JSON.parse(localStorage.getItem('gambit_mesa7')||'{}');}catch(e){}
+    this.state={lang:'es',screen:'menu',cat:'salado',cart:saved.cart||{},points:saved.points!=null?saved.points:340,
+      claimed:saved.claimed||[],detailId:null,puzzleReward:null,puzzleIdx:0,puzzleWrong:false,claimedReward:null,waiter:false,lastOrder:null};
+  }
+  save(){try{localStorage.setItem('gambit_mesa7',JSON.stringify({cart:this.state.cart,points:this.state.points,claimed:this.state.claimed}));}catch(e){}}
+  fmt(v,L){const s=Math.round(v*100)/100;const dec=s%1!==0;if(L==='es'){return (dec?s.toFixed(2).replace('.',','):String(s))+' €';}return '€'+(dec?s.toFixed(2):String(s));}
+  cartTotal(){return Object.keys(this.state.cart).reduce((t,id)=>{const m=this.MENU.find(x=>x.id===id);return t+(m?m.price*this.state.cart[id]:0);},0);}
+  cartCount(){return Object.values(this.state.cart).reduce((a,b)=>a+b,0);}
+  addItem(id){const c={...this.state.cart};c[id]=(c[id]||0)+1;this.setState({cart:c},this.save);}
+  decItem(id){const c={...this.state.cart};c[id]=(c[id]||0)-1;if(c[id]<=0)delete c[id];this.setState({cart:c},this.save);}
+  tier(p){let cur=this.TIERS[0],next=null;for(let i=0;i<this.TIERS.length;i++){if(p>=this.TIERS[i].min){cur=this.TIERS[i];next=this.TIERS[i+1]||null;}}const pct=next?Math.min(100,Math.round((p-cur.min)/(next.min-cur.min)*100)):100;return {cur,next,pct};}
+  buildBoard(pos){const files=['a','b','c','d','e','f','g','h'];const gl={K:'♔',Q:'♕',R:'♖',B:'♗',N:'♘',P:'♙',k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'};const out=[];for(let r=0;r<8;r++){for(let c=0;c<8;c++){const sq=files[c]+(8-r);const p=pos[sq];const light=(r+c)%2===0;out.push({glyph:p?gl[p]:'',bg:light?'#E7DDC5':'#7A6C54',fg:(p&&p===p.toUpperCase())?'#FAF6EC':'#17130D'});}}return out;}
+  startClaim(id){this.setState({puzzleReward:id,puzzleIdx:Math.floor(Math.random()*this.PUZZLES.length),puzzleWrong:false});}
+  answer(correct){if(!correct){this.setState({puzzleWrong:true});return;}const L=this.state.lang;const r=this.REWARDS.find(x=>x.id===this.state.puzzleReward);const code='GAMBIT-'+r.id.slice(0,4).toUpperCase()+'-'+Math.random().toString(36).slice(2,6).toUpperCase();const claimed=[...this.state.claimed,r.id];this.setState({points:this.state.points-r.cost,claimed,puzzleReward:null,puzzleWrong:false,claimedReward:{title:r[L].t,code}},this.save);}
+  pay(){const L=this.state.lang;const total=this.cartTotal();const earned=Math.round(total*10);const bal=this.state.points+earned;this.setState({points:bal,cart:{},screen:'confirm',lastOrder:{total:this.fmt(total,L),earned,balance:bal}},this.save);}
+  callWaiter(){this.setState({waiter:true});clearTimeout(this._wt);this._wt=setTimeout(()=>this.setState({waiter:false}),2600);}
+  renderVals(){
+    const L=this.state.lang,S=this.STR[L],sc=this.state.screen;
+    const gold='#C9A15A',cream='#EFE7D6',mut='#6f6656';
+    const cats=this.CATS.map(c=>{const on=c.id===this.state.cat;return {id:c.id,glyph:c.g,label:c[L],onSelect:()=>this.setState({cat:c.id}),
+      bg:on?'rgba(201,161,90,.16)':'rgba(230,220,200,.04)',border:on?'rgba(201,161,90,.55)':'rgba(230,220,200,.12)',color:on?'#E4C583':'#b6ac96'};});
+    const items=this.MENU.filter(m=>m.cat===this.state.cat).map(m=>{const q=this.state.cart[m.id]||0;const a=m[L].a,d=m[L].d;return {
+      name:m[L].n,desc:d,hasDesc:!!d,allLabel:S.allerg+a,hasAll:!!a,priceLabel:this.fmt(m.price,L),qty:q,inCart:q>0,notInCart:q===0,
+      onOpen:()=>this.setState({detailId:m.id}),onAdd:()=>this.addItem(m.id),onDec:()=>this.decItem(m.id)};});
+    const cartLines=Object.keys(this.state.cart).map(id=>{const m=this.MENU.find(x=>x.id===id);const q=this.state.cart[id];return {
+      name:m[L].n,qty:q,unitLabel:this.fmt(m.price,L)+' · ud',priceLabel:this.fmt(m.price*q,L),
+      onInc:()=>this.addItem(id),onDec:()=>this.decItem(id),onRemove:()=>this.decItem(id)};});
+    const total=this.cartTotal();
+    const t=this.tier(this.state.points);
+    const tierHint=t.next?((t.next.min-this.state.points)+' pts · '+t.next[L]):'♔ '+t.cur[L];
+    const rewards=this.REWARDS.map(r=>{const done=this.state.claimed.includes(r.id);const can=!done&&this.state.points>=r.cost;const locked=!done&&!can;return {
+      title:r[L].t,desc:r[L].d,costLabel:r.cost+' pts',claimedBool:done,canClaim:can,locked,
+      missingLabel:(r.cost-this.state.points)+' pts',border:done?'rgba(134,169,78,.4)':can?'rgba(201,161,90,.4)':'rgba(230,220,200,.08)',
+      onClaim:()=>this.startClaim(r.id)};});
+    const det=this.state.detailId?this.MENU.find(x=>x.id===this.state.detailId):null;
+    const detail=det?{glyph:this.GLYPH[det.cat],name:det[L].n,desc:det[L].d,hasDesc:!!det[L].d,allLabel:S.allerg+det[L].a,hasAll:!!det[L].a,
+      priceLabel:this.fmt(det.price,L),onAdd:()=>{this.addItem(det.id);this.setState({detailId:null});}}:null;
+    let puzzle=null;
+    if(this.state.puzzleReward){const P=this.PUZZLES[this.state.puzzleIdx];puzzle={prompt:S.pickMove,squares:this.buildBoard(P.pos),
+      options:P.options.map(o=>({label:o[L],onPick:()=>this.answer(o.c)}))};}
+    const active=this.CATS.find(c=>c.id===this.state.cat);
+    const navc=s=>sc===s?gold:mut;
+    return {
+      ui:S,tableNo:this.tableNo,otherLang:L==='es'?'EN':'ES',toggleLang:()=>this.setState({lang:L==='es'?'en':'es'}),
+      pointsLabel:this.state.points+' pts',points:this.state.points,
+      isMenu:sc==='menu',isRewards:sc==='rewards',isCart:sc==='cart',isCheckout:sc==='checkout',isConfirm:sc==='confirm',
+      isGame:this.state.cat==='game',activeCatLabel:active[L],cats,items,
+      tierName:t.cur[L],tierPct:t.pct,tierHint,
+      goMenu:()=>this.setState({screen:'menu'}),goRewards:()=>this.setState({screen:'rewards'}),
+      goCart:()=>this.setState({screen:'cart'}),goCheckout:()=>this.setState({screen:'checkout'}),goCart2:()=>this.setState({screen:'cart'}),
+      navMenuColor:navc('menu'),navRewardsColor:navc('rewards'),navCartColor:navc('cart'),
+      cartCount:this.cartCount(),cartHasItems:this.cartCount()>0,cartEmpty:this.cartCount()===0,cartHas:this.cartCount()>0,
+      cartLines,cartTotalLabel:this.fmt(total,L),pointsToEarn:Math.round(total*10),
+      goCheckout:()=>this.setState({screen:'checkout'}),pay:()=>this.pay(),callWaiter:()=>this.callWaiter(),
+      rewards,
+      showDetail:!!detail,detail,closeDetail:()=>this.setState({detailId:null}),stop:(e)=>e.stopPropagation(),
+      showPuzzle:!!puzzle,puzzle,puzzleWrong:this.state.puzzleWrong,closePuzzle:()=>this.setState({puzzleReward:null,puzzleWrong:false}),
+      showClaimed:!!this.state.claimedReward,claimedTitle:this.state.claimedReward?this.state.claimedReward.title:'',
+      claimedCode:this.state.claimedReward?this.state.claimedReward.code:'',closeClaimed:()=>this.setState({claimedReward:null}),
+      showWaiter:this.state.waiter,
+      lastTotal:this.state.lastOrder?this.state.lastOrder.total:'',lastEarned:this.state.lastOrder?this.state.lastOrder.earned:0,lastBalance:this.state.lastOrder?this.state.lastOrder.balance:0
+    };
+  }
+}
+</script>
+</body>
+</html>
