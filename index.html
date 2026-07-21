@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
   <title>Dimonova · Prototipos de carta digital</title>
+  <link rel="icon" type="image/png" href="logos/favicon.png" />
   <style>
     :root {
       --bg: #0f1115;
@@ -24,8 +25,9 @@
     }
     .wrap { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; }
     header { margin-bottom: 28px; }
-    h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.01em; }
-    h1 span { color: var(--accent); }
+    h1 { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; font-size: 1.35rem; font-weight: 600; letter-spacing: -0.01em; }
+    h1 img { height: 30px; width: auto; max-width: 100%; display: block; }
+    h1 span { color: var(--muted); font-weight: 400; }
     .sub { color: var(--muted); font-size: 0.9rem; margin-top: 6px; }
     .search {
       width: 100%;
@@ -71,7 +73,7 @@
 <body>
   <div class="wrap">
     <header>
-      <h1>dimo<span>nova</span> · prototipos</h1>
+      <h1><img src="logos/logo_header.png" alt="Dimonova" /><span>· prototipos</span></h1>
       <p class="sub">Cartas digitales de demostración. Cada prototipo se abre en pestaña nueva, sin vuelta atrás.</p>
     </header>
 
