@@ -22,11 +22,15 @@
   ::-webkit-scrollbar{width:0;height:0;}
   textarea::placeholder{color:#4a5680;}
   @keyframes pop{0%{transform:scale(.85);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  @media (max-width:520px){
+    #dc-shell{padding:0 !important;}
+    #dc-frame{width:100% !important;max-width:none !important;height:100dvh !important;border-radius:0 !important;border:none !important;}
+  }
 </style>
 </helmet>
 
-<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;background:radial-gradient(900px 500px at 50% -10%,#12121c,#050509 70%);font-family:'Space Grotesk',sans-serif;">
-  <div style="width:412px;height:872px;background:#07070d;border:1px solid rgba(34,211,238,.35);border-radius:44px;overflow:hidden;display:flex;flex-direction:column;color:#e6f0ff;box-shadow:0 0 80px rgba(34,211,238,.12),0 40px 100px rgba(0,0,0,.7);position:relative;">
+<div id="dc-shell" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;background:radial-gradient(900px 500px at 50% -10%,#12121c,#050509 70%);font-family:'Space Grotesk',sans-serif;">
+  <div id="dc-frame" style="width:412px;max-width:100%;height:min(872px,calc(100dvh - 80px));background:#07070d;border:1px solid rgba(34,211,238,.35);border-radius:44px;overflow:hidden;display:flex;flex-direction:column;color:#e6f0ff;box-shadow:0 0 80px rgba(34,211,238,.12),0 40px 100px rgba(0,0,0,.7);position:relative;">
 
     <!-- ============ MENU VIEW ============ -->
     <sc-if value="{{ isMenu }}" hint-placeholder-val="{{ true }}">
