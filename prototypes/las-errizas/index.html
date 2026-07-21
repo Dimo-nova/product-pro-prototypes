@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Las Errizas - Hotel Restaurante</title>
+    <meta name="description" content="Las Errizas - Hotel Restaurante con cocina clasica con producto fresco." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="pt-15">
+      <div class="brand">
+        <div class="logo-badge">
+          <img
+            src="images/brand/logo.svg"
+            width="120"
+            height="120"
+            alt="Las Errizas Logo"
+            class="my-2 align-middle mx-auto"
+            loading="eager"
+          />
+        </div>
+      </div>
+      <nav class="nav-scroller px-15 pt-10 pb-15 space-x-3" id="categoryNav"></nav>
+    </header>
+
+    <div class="hero-slider" id="heroSlider">
+      <div class="slider-container" id="sliderContainer"></div>
+      <div class="slider-arrows" id="sliderArrows">
+        <button class="slider-arrow" id="sliderPrev" aria-label="Previous slide">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button class="slider-arrow" id="sliderNext" aria-label="Next slide">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+      <div class="slider-dots" id="sliderDots"></div>
+    </div>
+
+    <main>
+      <div class="celiac-filter-container">
+        <label class="celiac-checkbox">
+          <input type="checkbox" id="celiacFilter" />
+          <span class="checkmark border-cream"></span>
+          <span class="label-text">
+            Soy celíaco
+            <i class="fa-solid fa-wheat-awn-circle-exclamation text-cream"></i>
+          </span>
+        </label>
+      </div>
+
+      <div class="daily-menu-callout">
+        <button class="daily-menu-trigger" id="dailyMenuButton">
+          Ver menu del dia
+        </button>
+      </div>
+
+      <div id="menuSections"></div>
+
+      <footer class="price-disclaimer">
+        <p>Precios en € con IVA incluido</p>
+      </footer>
+    </main>
+
+    <div class="modal-overlay" id="dishModalOverlay">
+      <div class="modal-content" id="dishModalContent">
+        <button class="close-btn" id="dishModalClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="modal-header-img" id="dishModalMedia"></div>
+        <div class="modal-body" id="dishModalBody"></div>
+      </div>
+    </div>
+
+    <div class="daily-menu-overlay" id="dailyMenuOverlay">
+      <div class="daily-menu-content" id="dailyMenuContent">
+        <button class="close-btn" id="dailyMenuClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="daily-menu-body" id="dailyMenuBody"></div>
+      </div>
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>

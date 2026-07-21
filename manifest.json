@@ -1,0 +1,122 @@
+{
+  "generated": true,
+  "prototypes": [
+    {
+      "slug": "calsots",
+      "name": "Restaurante calçot",
+      "tagline": "",
+      "location": "",
+      "ownData": false,
+      "updated": "2026-02-22",
+      "archived": false
+    },
+    {
+      "slug": "caprichos-chef",
+      "name": "Caprichos del Chef",
+      "tagline": "Marisqueria y cocina clasica con producto fresco",
+      "location": "Barcelona",
+      "ownData": true,
+      "updated": "2026-02-16",
+      "archived": false
+    },
+    {
+      "slug": "cerveceria-europa",
+      "name": "Cerveceria Europa",
+      "tagline": "Cocina clasica y cervezas seleccionadas",
+      "location": "Barcelona",
+      "ownData": true,
+      "updated": "2026-02-14",
+      "archived": false
+    },
+    {
+      "slug": "chispas",
+      "name": "Chispas",
+      "tagline": "Especialistas en carne a la brasa de la máxima calidad",
+      "location": "Boadilla del Monte",
+      "ownData": true,
+      "updated": "2026-02-25",
+      "archived": false
+    },
+    {
+      "slug": "el-toro",
+      "name": "El Toro Majadahonda",
+      "tagline": "Especialistas en carne a la brasa de la máxima calidad",
+      "location": "Majadahonda",
+      "ownData": true,
+      "updated": "2026-02-22",
+      "archived": false
+    },
+    {
+      "slug": "estoque",
+      "name": "Carta Digital Estoque",
+      "tagline": "Marisqueria y cocina clasica con producto fresco",
+      "location": "Barcelona",
+      "ownData": true,
+      "updated": "2026-02-22",
+      "archived": false
+    },
+    {
+      "slug": "heladeria-playa-san-juan",
+      "name": "Heladeria Playa San Juan",
+      "tagline": "Copas de helado, batidos, granizados y desayunos frente al mar",
+      "location": "Playa San Juan",
+      "ownData": true,
+      "updated": "2026-02-14",
+      "archived": false
+    },
+    {
+      "slug": "kedada",
+      "name": "La Kedada",
+      "tagline": "",
+      "location": "",
+      "ownData": false,
+      "updated": "2026-02-10",
+      "archived": false
+    },
+    {
+      "slug": "la-pulperia",
+      "name": "La Pulperia",
+      "tagline": "Marisqueria y cocina clasica con producto fresco",
+      "location": "Barcelona",
+      "ownData": true,
+      "updated": "2026-02-22",
+      "archived": false
+    },
+    {
+      "slug": "las-errizas",
+      "name": "Las Errizas",
+      "tagline": "Marisqueria y cocina clasica con producto fresco",
+      "location": "Barcelona",
+      "ownData": true,
+      "updated": "2026-02-16",
+      "archived": false
+    },
+    {
+      "slug": "pakito-burguer",
+      "name": "Pakito Burguer",
+      "tagline": "Comida rapida de barrio: hamburguesas, pizzas y raciones",
+      "location": "Barrio",
+      "ownData": true,
+      "updated": "2026-02-16",
+      "archived": false
+    },
+    {
+      "slug": "salado-dulce",
+      "name": "Salado Dulce",
+      "tagline": "Crêpes, empanadas argentinas, helados ecológicos y mucho más",
+      "location": "Barcelona",
+      "ownData": true,
+      "updated": "2026-02-15",
+      "archived": false
+    },
+    {
+      "slug": "tortilla",
+      "name": "Tortilla de Patata",
+      "tagline": "",
+      "location": "",
+      "ownData": false,
+      "updated": "2026-02-10",
+      "archived": false
+    }
+  ]
+}
