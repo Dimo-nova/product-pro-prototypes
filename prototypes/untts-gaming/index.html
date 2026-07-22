@@ -22,8 +22,12 @@
   ::-webkit-scrollbar{width:0;height:0;}
   textarea::placeholder{color:#4a5680;}
   @keyframes pop{0%{transform:scale(.85);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  @keyframes bump{0%{transform:scale(1);}40%{transform:scale(1.35);}100%{transform:scale(1);}}
+  .addbtn{transition:transform .12s ease;}
+  .addbtn:active{transform:scale(.82);}
   @media (max-width:520px){
-    #dc-shell{padding:0 !important;}
+    html,body{height:100%;overflow:hidden;}
+    #dc-shell{padding:0 !important;min-height:0 !important;height:100dvh !important;}
     #dc-frame{width:100% !important;max-width:none !important;height:100dvh !important;border-radius:0 !important;border:none !important;}
   }
 </style>
@@ -59,7 +63,16 @@
             </div>
             <div style="text-align:right;flex-shrink:0;">
               <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px;">{{ feat.priceFmt }}</div>
-              <button onClick="{{ feat.onAdd }}" style="margin-top:8px;background:#22d3ee;color:#04121a;border:none;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;padding:8px 16px;border-radius:999px;cursor:pointer;box-shadow:0 0 16px rgba(34,211,238,.5);">+</button>
+              <sc-if value="{{ feat.inCart }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:8px;display:flex;align-items:center;gap:4px;background:#07070d;border:1px solid rgba(34,211,238,.45);border-radius:999px;padding:3px;animation:pop .25s ease;box-shadow:0 0 12px rgba(34,211,238,.25);">
+                  <button class="addbtn" onClick="{{ feat.onDec }}" style="width:26px;height:26px;background:transparent;border:none;color:#22d3ee;font-size:16px;cursor:pointer;line-height:0;">−</button>
+                  <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;min-width:16px;text-align:center;color:#e6f0ff;animation:bump .25s ease;">{{ feat.qty }}</span>
+                  <button class="addbtn" onClick="{{ feat.onAdd }}" style="width:26px;height:26px;background:#22d3ee;color:#04121a;border:none;border-radius:999px;font-size:16px;cursor:pointer;line-height:0;font-weight:700;">+</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ feat.notInCart }}" hint-placeholder-val="{{ true }}">
+                <button class="addbtn" onClick="{{ feat.onAdd }}" style="margin-top:8px;background:#22d3ee;color:#04121a;border:none;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;padding:8px 16px;border-radius:999px;cursor:pointer;box-shadow:0 0 16px rgba(34,211,238,.5);">+</button>
+              </sc-if>
             </div>
           </div>
         </div>
@@ -81,7 +94,16 @@
                 </div>
                 <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
                   <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;color:#22d3ee;">{{ p.priceFmt }}</span>
-                  <button onClick="{{ p.onAdd }}" style="width:32px;height:32px;background:transparent;border:1px solid #22d3ee;color:#22d3ee;font-size:18px;line-height:0;border-radius:10px;cursor:pointer;">+</button>
+                  <sc-if value="{{ p.inCart }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;align-items:center;gap:4px;background:#07070d;border:1px solid rgba(34,211,238,.45);border-radius:10px;padding:2px;animation:pop .25s ease;box-shadow:0 0 12px rgba(34,211,238,.25);">
+                      <button class="addbtn" onClick="{{ p.onDec }}" style="width:28px;height:28px;background:transparent;border:none;color:#22d3ee;font-size:17px;cursor:pointer;line-height:0;">−</button>
+                      <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;min-width:18px;text-align:center;color:#e6f0ff;animation:bump .25s ease;">{{ p.qty }}</span>
+                      <button class="addbtn" onClick="{{ p.onAdd }}" style="width:28px;height:28px;background:#22d3ee;color:#04121a;border:none;border-radius:8px;font-size:17px;cursor:pointer;line-height:0;font-weight:700;">+</button>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ p.notInCart }}" hint-placeholder-val="{{ true }}">
+                    <button class="addbtn" onClick="{{ p.onAdd }}" style="width:32px;height:32px;background:transparent;border:1px solid #22d3ee;color:#22d3ee;font-size:18px;line-height:0;border-radius:10px;cursor:pointer;">+</button>
+                  </sc-if>
                 </div>
               </div>
             </sc-for>
@@ -233,8 +255,9 @@ class Component extends DCLogic {
     const S={ es:{yourSeat:'Tu asiento',delivered:'servido en tu puesto',scanned:'QR escaneado',featured:'Destacado',viewOrder:'Ver pedido',addMore:'Añade a tu pedido',yourOrder:'Tu pedido',emptyCart:'Tu pedido está vacío',notes:'Notas para la barra',notesPh:'Sin hielo, poco picante…',tip:'Propina',subtotal:'Subtotal',total:'Total',sendToBar:'Enviar a la barra',sent:'¡Pedido enviado!',sentDesc:'La barra lo está preparando y el staff lo llevará a tu puesto.',orderNo:'Nº de pedido',eta:'Llega en ~8–12 min',newOrder:'Nuevo pedido',noTip:'Sin propina'},
               en:{yourSeat:'Your seat',delivered:'delivered to your seat',scanned:'QR scanned',featured:'Featured',viewOrder:'View order',addMore:'Add to your order',yourOrder:'Your order',emptyCart:'Your order is empty',notes:'Notes for the bar',notesPh:'No ice, mild spice…',tip:'Tip',subtotal:'Subtotal',total:'Total',sendToBar:'Send to the bar',sent:'Order sent!',sentDesc:'The bar is preparing it and staff will bring it to your seat.',orderNo:'Order no.',eta:'Arrives in ~8–12 min',newOrder:'New order',noTip:'No tip'} };
     const t=S[lang];
-    const cats=this.data.map(c=>({ id:c.id, label:c[lang], items:c.items.map(i=>({ id:i.id, name:i.name, priceFmt:eur(i.price), desc:i['d_'+lang], hasTag:!!i.tag, tag:i.tag?i['t_'+lang]:'', onAdd:()=>this.add(i.id) })) }));
+    const cats=this.data.map(c=>({ id:c.id, label:c[lang], items:c.items.map(i=>{ const qty=this.state.cart[i.id]||0; return { id:i.id, name:i.name, priceFmt:eur(i.price), desc:i['d_'+lang], hasTag:!!i.tag, tag:i.tag?i['t_'+lang]:'', qty, inCart:qty>0, notInCart:qty===0, onAdd:()=>this.add(i.id), onDec:()=>this.dec(i.id) }; }) }));
     const f=this.feat;
+    const featQty=this.state.cart[f.id]||0;
     const tt=this.totals();
     const cartItems=Object.keys(this.state.cart).map(id=>{ const it=ix[id]||{}; const qty=this.state.cart[id]; return { id, name:it.name, qty, priceFmt:eur(it.price||0), lineFmt:eur((it.price||0)*qty), inc:()=>this.inc(id), dec:()=>this.dec(id) }; });
     const tipVals=[0,0.5,1,2];
@@ -250,7 +273,7 @@ class Component extends DCLogic {
       submit:()=>this.submit(), reset:()=>this.reset(),
       notes:this.state.notes, setNotes:(e)=>this.setState({notes:e.target.value}),
       tipOpts,
-      cats, feat:{ name:f.name, desc:f['d_'+lang], save:f['s_'+lang], priceFmt:eur(f.price), onAdd:()=>this.add(f.id) },
+      cats, feat:{ name:f.name, desc:f['d_'+lang], save:f['s_'+lang], priceFmt:eur(f.price), qty:featQty, inCart:featQty>0, notInCart:featQty===0, onAdd:()=>this.add(f.id), onDec:()=>this.dec(f.id) },
       cart:{ count:tt.n, empty:tt.n===0, has:tt.n>0, items:cartItems, subFmt:eur(tt.sub), tipFmt:eur(tt.tip), hasTip:tt.tip>0, totalFmt:eur(tt.total) },
       orderNum:this.state.orderNum, lastTotalFmt:eur(this.state.lastTotal),
     };
