@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+<meta charset="utf-8">
+<title>Replay - Carta digital</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#efeae3;}
+a{color:#EC168F;text-decoration:none;} a:hover{color:#c00e75;}
+@keyframes popIn{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+<div style="max-width:430px;margin:0 auto;background:#ffffff;font-family:'Barlow',sans-serif;color:#1b1b1b;position:relative;box-shadow:0 0 40px rgba(0,0,0,.12)">
+
+  <header style="position:sticky;top:0;z-index:30;background:#ffffff;border-bottom:3px solid #1b1b1b;padding:14px 16px 10px;display:flex;align-items:center;gap:12px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="background:#EC168F;color:#fff;font-family:'Baloo 2',cursive;font-weight:800;font-size:24px;line-height:1;padding:6px 9px 8px;border-radius:10px;transform:rotate(-4deg)">Re</div>
+      <div>
+        <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:22px;line-height:1;color:#1b1b1b">play</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:10px;letter-spacing:2.5px;color:#8DC63F">BOARDGAME CAFE</div>
+      </div>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;background:#8DC63F;color:#fff;padding:5px 10px;border-radius:999px">MESA {{ tableNum }}</div>
+      <button onClick="{{ openCart }}" style="position:relative;background:#1b1b1b;color:#fff;border:none;border-radius:12px;padding:7px 12px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;cursor:pointer">PEDIDO
+        <sc-if value="{{ hasCart }}" hint-placeholder-val="{{ false }}">
+          <span style="position:absolute;top:-7px;right:-7px;background:#EC168F;color:#fff;font-size:11px;font-weight:700;min-width:18px;height:18px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;padding:0 4px">{{ cartCount }}</span>
+        </sc-if>
+      </button>
+    </div>
+  </header>
+
+  <nav style="position:sticky;top:64px;z-index:29;background:#ffffff;display:flex;gap:8px;overflow-x:auto;padding:12px 16px;border-bottom:1px solid #eee">
+    <sc-for list="{{ tabs }}" as="tab" hint-placeholder-count="6">
+      <button onClick="{{ tab.onClick }}" style="{{ tab.style }}">{{ tab.label }}</button>
+    </sc-for>
+  </nav>
+
+  <sc-if value="{{ isMenu }}" hint-placeholder-val="{{ true }}">
+    <main data-screen-label="Carta" style="padding:20px 16px 110px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <h1 style="font-family:'Baloo 2',cursive;font-weight:800;font-size:34px;margin:0;color:#EC168F">{{ catTitle }}</h1>
+        <span style="color:#8DC63F;font-size:22px">✦</span>
+      </div>
+      <sc-if value="{{ hasCatNote }}" hint-placeholder-val="{{ false }}">
+        <p style="margin:2px 0 0;font-size:14px;color:#777">{{ catNote }}</p>
+      </sc-if>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
+        <sc-for list="{{ items }}" as="item" hint-placeholder-count="5">
+          <div style="border:2px solid #1b1b1b;border-radius:16px;padding:14px 14px 12px;display:flex;gap:12px;align-items:flex-start;background:#fff">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <span style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.5px;text-transform:uppercase;color:#1b1b1b">{{ item.name }}</span>
+                <sc-if value="{{ item.veg }}" hint-placeholder-val="{{ false }}">
+                  <span style="background:#8DC63F;color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:1px;padding:2px 7px;border-radius:999px">VEGGIE</span>
+                </sc-if>
+              </div>
+              <sc-if value="{{ item.hasDesc }}" hint-placeholder-val="{{ true }}">
+                <p style="margin:4px 0 0;font-size:13.5px;line-height:1.4;color:#6f6f6f;text-wrap:pretty">{{ item.desc }}</p>
+              </sc-if>
+              <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:18px;color:#EC168F;margin-top:6px">{{ item.priceStr }}</div>
+            </div>
+            <sc-if value="{{ item.inCart }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:10px;background:#1b1b1b;border-radius:999px;padding:5px 10px">
+                <button onClick="{{ item.dec }}" style="background:none;border:none;color:#fff;font-size:18px;font-weight:700;cursor:pointer;padding:0 2px">−</button>
+                <span style="color:#fff;font-weight:700;font-size:15px;min-width:14px;text-align:center">{{ item.qty }}</span>
+                <button onClick="{{ item.inc }}" style="background:none;border:none;color:#8DC63F;font-size:18px;font-weight:700;cursor:pointer;padding:0 2px">+</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ item.notInCart }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ item.inc }}" style="background:#EC168F;border:none;color:#fff;width:38px;height:38px;border-radius:12px;font-size:22px;font-weight:700;cursor:pointer;line-height:1;flex-shrink:0" style-hover="background:#c00e75">+</button>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top:24px;background:#1b1b1b;border-radius:18px;padding:18px 18px 16px;transform:rotate(-1deg)">
+        <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:24px;color:#8DC63F;line-height:1.1">¡Quédate a jugar!</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:17px;color:#fff;margin-top:4px">Por solo <span style="color:#EC168F;font-weight:700">3,75 €*</span> a todos los juegos que quieras · +2000 juegos</div>
+        <div style="font-size:11px;color:#999;margin-top:8px;line-height:1.4">*Coste por jugar de 3,75 € por persona + una consumición de carta obligatoria por persona. En caso de no consumir se cobrarán 6 € por jugar.</div>
+      </div>
+      <div style="text-align:center;font-size:12px;color:#999;margin-top:18px">Todos los precios incluyen IVA · Carta de alérgenos disponible</div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isShop }}" hint-placeholder-val="{{ false }}">
+    <main data-screen-label="Tienda" style="padding:20px 16px 110px">
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <h1 style="font-family:'Baloo 2',cursive;font-weight:800;font-size:34px;margin:0;color:#8DC63F">Tienda de juegos</h1>
+        <span style="color:#EC168F;font-size:22px">✦</span>
+      </div>
+      <p style="margin:4px 0 0;font-size:14px;color:#777;text-wrap:pretty">¿Te ha gustado un juego de la mesa? Resérvalo desde el móvil y recógelo en barra al salir.</p>
+      <div style="display:flex;gap:8px;margin-top:14px;overflow-x:auto">
+        <sc-for list="{{ shopFilters }}" as="f" hint-placeholder-count="3">
+          <button onClick="{{ f.onClick }}" style="{{ f.style }}">{{ f.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
+        <sc-for list="{{ games }}" as="g" hint-placeholder-count="6">
+          <div style="border:2px solid #1b1b1b;border-radius:16px;overflow:hidden;background:#fff;display:flex;flex-direction:column">
+            <div style="position:relative;aspect-ratio:1;background:repeating-linear-gradient(45deg,#f4f4f4 0 10px,#eaeaea 10px 20px);display:flex;align-items:center;justify-content:center;overflow:hidden">
+              <sc-if value="{{ g.hasImg }}" hint-placeholder-val="{{ false }}">{{ g.imgEl }}</sc-if>
+              <sc-if value="{{ g.noImg }}" hint-placeholder-val="{{ true }}">
+                <span style="font-family:monospace;font-size:11px;color:#9a9a9a">portada del juego</span>
+              </sc-if>
+              <sc-if value="{{ g.hasBadge }}" hint-placeholder-val="{{ false }}">
+                <span style="{{ g.badgeStyle }}">{{ g.badge }}</span>
+              </sc-if>
+            </div>
+            <div style="padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px;flex:1">
+              <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;line-height:1.15;text-transform:uppercase;letter-spacing:.3px">{{ g.name }}</div>
+              <div style="display:flex;align-items:baseline;gap:6px;margin-top:auto">
+                <sc-if value="{{ g.hasOffer }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:13px;color:#aaa;text-decoration:line-through">{{ g.oldPriceStr }}</span>
+                </sc-if>
+                <sc-if value="{{ g.hasPrice }}" hint-placeholder-val="{{ true }}">
+                  <span style="font-family:'Baloo 2',cursive;font-weight:700;font-size:18px;color:#EC168F">{{ g.priceStr }}</span>
+                </sc-if>
+              </div>
+              <sc-if value="{{ g.soldOut }}" hint-placeholder-val="{{ false }}">
+                <button disabled="{{ true }}" style="background:#eee;border:none;color:#aaa;border-radius:10px;padding:8px 0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px">AGOTADO</button>
+              </sc-if>
+              <sc-if value="{{ g.available }}" hint-placeholder-val="{{ true }}">
+                <sc-if value="{{ g.inCart }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ g.dec }}" style="background:#1b1b1b;border:none;color:#fff;border-radius:10px;padding:8px 0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;cursor:pointer">RESERVADO ✓ · QUITAR</button>
+                </sc-if>
+                <sc-if value="{{ g.notInCart }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ g.inc }}" style="background:#8DC63F;border:none;color:#fff;border-radius:10px;padding:8px 0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;cursor:pointer" style-hover="background:#7ab32e">RESERVAR</button>
+                </sc-if>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="text-align:center;font-size:12px;color:#999;margin-top:18px">Prueba cualquier juego en mesa antes de comprarlo · Outlet y segunda mano</div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ hasCart }}" hint-placeholder-val="{{ false }}">
+    <div style="position:sticky;bottom:0;z-index:30;padding:6px 16px 10px;background:#fff">
+      <button onClick="{{ openCart }}" style="width:100%;background:#EC168F;border:none;color:#fff;border-radius:16px;padding:15px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 6px 18px rgba(236,22,143,.35)" style-hover="background:#c00e75">
+        <span style="font-family:'Baloo 2',cursive;font-weight:700;font-size:18px">Ver pedido · Mesa {{ tableNum }}</span>
+        <span style="font-family:'Baloo 2',cursive;font-weight:700;font-size:18px">{{ cartTotalStr }}</span>
+      </button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ cartOpen }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Pedido" style="position:fixed;inset:0;z-index:50;background:rgba(27,27,27,.55);display:flex;align-items:flex-end;justify-content:center" onClick="{{ closeCart }}">
+      <div style="width:100%;max-width:430px;background:#fff;border-radius:24px 24px 0 0;max-height:82vh;overflow-y:auto;padding:20px 18px 18px;animation:popIn .18s ease-out" onClick="{{ stop }}">
+        <div style="display:flex;align-items:center;gap:10px">
+          <h2 style="font-family:'Baloo 2',cursive;font-weight:800;font-size:26px;margin:0;color:#1b1b1b">Tu pedido</h2>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;background:#8DC63F;color:#fff;padding:4px 9px;border-radius:999px">MESA {{ tableNum }}</span>
+          <button onClick="{{ closeCart }}" style="margin-left:auto;background:#f2f2f2;border:none;width:32px;height:32px;border-radius:999px;font-size:15px;cursor:pointer;color:#1b1b1b">✕</button>
+        </div>
+        <sc-if value="{{ hasMesa }}" hint-placeholder-val="{{ true }}">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:1.5px;color:#EC168F;margin:16px 0 8px">PARA LA MESA</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ mesaItems }}" as="line" hint-placeholder-count="2">
+              <div style="display:flex;align-items:center;gap:10px;border-bottom:1px solid #f0f0f0;padding-bottom:10px">
+                <div style="flex:1;min-width:0">
+                  <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase">{{ line.name }}</div>
+                  <div style="font-size:13px;color:#999">{{ line.lineTotalStr }}</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:9px;background:#f4f4f4;border-radius:999px;padding:4px 9px">
+                  <button onClick="{{ line.dec }}" style="background:none;border:none;font-size:16px;font-weight:700;cursor:pointer;color:#1b1b1b;padding:0 2px">−</button>
+                  <span style="font-weight:700;font-size:14px;min-width:12px;text-align:center">{{ line.qty }}</span>
+                  <button onClick="{{ line.inc }}" style="background:none;border:none;font-size:16px;font-weight:700;cursor:pointer;color:#EC168F;padding:0 2px">+</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasTienda }}" hint-placeholder-val="{{ false }}">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:1.5px;color:#8DC63F;margin:16px 0 8px">TIENDA · RECOGER EN BARRA</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ tiendaItems }}" as="line" hint-placeholder-count="1">
+              <div style="display:flex;align-items:center;gap:10px;border-bottom:1px solid #f0f0f0;padding-bottom:10px">
+                <div style="flex:1;min-width:0">
+                  <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase">{{ line.name }}</div>
+                  <div style="font-size:13px;color:#999">{{ line.lineTotalStr }}</div>
+                </div>
+                <button onClick="{{ line.remove }}" style="background:#f4f4f4;border:none;border-radius:999px;padding:6px 12px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;cursor:pointer;color:#666">Quitar</button>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:16px">
+          <span style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;letter-spacing:1px;color:#666">TOTAL</span>
+          <span style="font-family:'Baloo 2',cursive;font-weight:800;font-size:26px;color:#1b1b1b">{{ cartTotalStr }}</span>
+        </div>
+        <button onClick="{{ sendOrder }}" style="width:100%;margin-top:14px;background:#EC168F;border:none;color:#fff;border-radius:16px;padding:16px;font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;cursor:pointer;box-shadow:0 6px 18px rgba(236,22,143,.35)" style-hover="background:#c00e75">Enviar pedido a la mesa</button>
+        <div style="text-align:center;font-size:12px;color:#999;margin-top:10px">Sin levantarte de la partida · pagas al final en mesa o barra</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ ordered }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Confirmación" style="position:fixed;inset:0;z-index:60;background:#EC168F;display:flex;align-items:center;justify-content:center">
+      <div style="max-width:430px;width:100%;text-align:center;padding:32px;animation:popIn .25s ease-out">
+        <div style="width:88px;height:88px;border-radius:999px;background:#8DC63F;color:#fff;font-size:44px;display:flex;align-items:center;justify-content:center;margin:0 auto">✓</div>
+        <h2 style="font-family:'Baloo 2',cursive;font-weight:800;font-size:34px;color:#fff;margin:20px 0 0;line-height:1.1">¡Pedido en marcha!</h2>
+        <p style="color:#ffd6ec;font-size:16px;margin:10px 0 0;line-height:1.5;text-wrap:pretty">Te lo llevamos a la <strong style="color:#fff">mesa {{ tableNum }}</strong> sin que dejes la partida.<br>Los juegos reservados te esperan en barra.</p>
+        <button onClick="{{ resetOrder }}" style="margin-top:26px;background:#fff;border:none;color:#EC168F;border-radius:16px;padding:14px 28px;font-family:'Baloo 2',cursive;font-weight:700;font-size:17px;cursor:pointer">Volver a la carta</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:430,&quot;height&quot;:900},&quot;tableNumber&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:14,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:1,&quot;max&quot;:99,&quot;section&quot;:&quot;Sala&quot;},&quot;showSoldOut&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Tienda&quot;}}">
+class Component extends DCLogic {
+  state = { tab: 'entrantes', cart: {}, cartOpen: false, ordered: false, shopFilter: 'todos' };
+
+  menu() {
+    const v = true;
+    return [
+      { id:'entrantes', label:'Entrantes', title:'Entrantes', items:[
+        ['patatas-myst','Patatas con Mysterium',12.50,'Patatas fritas con queso fundido, bacon, salchichas y sour cream'],
+        ['wingspan','Wingspan Fingers',9.50,'Fingers de pollo con salsa barbacoa'],
+        ['tequenos','Tequeños de Castronegro',9.35,'Tequeños de queso blanco con salsa de ajo'],
+        ['nachos','Crazy Nachos',13.95,'Totopos de maíz con queso fundido, frijoles negros, jalapeños, pico de gallo, sour cream y guacamole'],
+        ['speedcups','Speed Cups con Salsas',9.90,'Patatas gajo especiadas con salsas variadas'],
+        ['quesadilla','Quesadilla de Trivial',9.50,'Wrap, guacamole, cebolla frita, queso cheddar y crema agria'],
+        ['guacamole','¡Guacamole!',7.95,'Dips de trigo y guacamole casero',v]]},
+      { id:'burgers', label:'Burgers', title:'Burgers', note:'Todas van acompañadas con patatas fritas', items:[
+        ['b-clasico','Modo Clásico',12.50,'Pan brioche, carne de ternera Angus, queso cheddar, bacon, lechuga, tomate y cebolla'],
+        ['b-casual','Modo Casual',13.50,'Pan brioche, pechuga de pollo, queso cheddar, bacon, cebolla, lechuga, tomate y salsa miel y mostaza'],
+        ['b-extremo','Modo Extremo',13.50,'Pan brioche, carne de ternera Angus, bacon, jalapeños, lechuga, tomate, cebolla y salsa picante'],
+        ['b-avanzado','Modo Avanzado',13.75,'Pan brioche, carne de ternera Angus, queso de cabra y cebolla caramelizada'],
+        ['b-experto','Modo Experto',13.95,'Pan brioche, carne de ternera Angus, queso cheddar, bacon, cebolla caramelizada, lechuga y salsa miel y mostaza'],
+        ['b-alternativo','Modo Alternativo',13.75,'Pan grill, carne Heura, cebolla caramelizada, lechuga, tomate y guacamole',v]]},
+      { id:'barquitos', label:'Barquitos', title:'Barquitos', note:'Todos van acompañados con patatas fritas', items:[
+        ['bq-piko','Barquito Piko Piko',9.95,'Barquito de pan brioche, queso fundido, pollo asado, bacon, lechuga y salsa barbacoa'],
+        ['bq-agricola','Barquito Agrícola',9.50,'Barquito de pan brioche, guacamole, pollo asado, cebolla frita y tomate'],
+        ['bq-exploding','Exploding Barquito',9.95,'Barquito de pan brioche, salchicha, guacamole, pico de gallo, salsa picante y chips de totopos'],
+        ['bq-throw','Throw Throw Barquito',9.50,'Barquito de pan brioche, salchicha, queso fundido, bacon, cebolla frita y salsa barbacoa'],
+        ['bq-heura','Barquito Agrícola Heura',9.40,'Barquito de pan brioche, guacamole, Heura, cebolla frita y tomate',v]]},
+      { id:'ensaladas', label:'Ensaladas', title:'Ensaladas', items:[
+        ['e-prohibida','La Ensalada Prohibida',8.95,'Lechuga, tomate cherry, pollo asado y salsa césar'],
+        ['e-terraforming','Terraforming Salad',8.95,'Lechuga, tomate cherry, Heura y salsa césar',v],
+        ['e-gato','Gato, Queso, Cabra, Ensalada',8.95,'Lechuga, queso de cabra, cebolla morada, tomate cherry y salsa miel y mostaza',v]]},
+      { id:'postres', label:'Postres', title:'Postres', items:[
+        ['p-cheese','Cheese Cakes!',8.50,'Tarta de queso templado con sirope de chocolate blanco y crumble de galleta'],
+        ['p-gofres','Gofres Against Humanity',8.50,'Gofre con helado de vainilla y sirope de chocolate'],
+        ['p-coulant','Cacao Coulant',7.75,'Coulant con helado de vainilla y nata'],
+        ['p-ping-choco','Pingüino de Chocolate',6.75,'Helado de chocolate con nata, sirope de chocolate blanco y crumble de galleta'],
+        ['p-ping-vain','Pingüino de Vainilla',6.75,'Helado de vainilla con nata, sirope de chocolate y crumble de galleta']]},
+      { id:'batidos', label:'Batidos', title:'Batidos', items:[
+        ['bt-vainilla','Batido al Tren de Vainilla',7.95,'Batido de helado de vainilla con nata, sirope y crumble de galleta'],
+        ['bt-choco','Batido al Tren de Chocolate',7.95,'Batido de helado de chocolate con nata, sirope y crumble de galleta'],
+        ['bt-platano','Batido al Tren de Plátano',7.95,'Batido de helado sabor plátano con nata, sirope y crumble de galleta. Sin conservantes añadidos'],
+        ['bt-fresa','Batido al Tren de Fresa',7.95,'Batido de helado sabor fresa con nata, sirope y crumble de galleta. Sin conservantes añadidos']]},
+      { id:'frias', label:'Bebidas frías', title:'Bebidas frías', items:[
+        ['f-cola','Coca-Cola',2.90,'Original, Zero y Zero-Zero'],
+        ['f-fanta','Fanta',2.90,'Naranja o limón'],
+        ['f-aquarius','Aquarius',3.00,''],
+        ['f-fuze','Fuze Tea',3.00,''],
+        ['f-tonica','Tónica',2.90,''],
+        ['f-agua','Agua',2.00,''],
+        ['f-aguagas','Agua con gas',2.50,''],
+        ['f-zumo','Zumo',2.50,'Naranja, piña o melocotón'],
+        ['f-monster','Monster Verde 235 ml',3.50,''],
+        ['f-tinto','Tinto de verano con limón',4.00,''],
+        ['f-mahou5','Tercio Mahou 5 Estrellas',3.75,''],
+        ['f-tostada','Tercio Mahou 0,0 Tostada',3.75,''],
+        ['f-singluten','Tercio Mahou 5 Estrellas sin gluten',4.65,''],
+        ['f-ccvk','Tercio cerveza artesana CCVK',5.00,''],
+        ['f-mediapinta','1/2 pinta Mahou Clásica',2.50,''],
+        ['f-pinta','Pinta Mahou Clásica',4.25,''],
+        ['f-hidromiel','Hidromiel Viking Bad',6.30,''],
+        ['f-tinto-copa','Copa de vino tinto',3.75,''],
+        ['f-blanco-copa','Copa de vino blanco',3.75,''],
+        ['f-espirituosas','Copas espirituosas',8.50,'Ron, whisky y ginebra']]},
+      { id:'calientes', label:'Bebidas calientes', title:'Bebidas calientes', note:'Extra por hacerlo grande +1,00 € · Extra leche de soja +0,50 €', items:[
+        ['c-solo','Café solo',1.90,''],
+        ['c-leche','Café con leche',2.20,''],
+        ['c-cortado','Café cortado',1.90,''],
+        ['c-cappu','Cappuccino',3.50,''],
+        ['c-americano','Americano',2.20,''],
+        ['c-bombon','Café bombón',3.50,'Con leche condensada'],
+        ['c-colacao','Cola-Cao',2.50,''],
+        ['c-terojo','Té rojo',2.00,'Con ciruela y anís'],
+        ['c-teverde','Té verde',2.00,''],
+        ['c-tenegro','Té negro',2.00,'']]},
+      { id:'extras', label:'Extras', title:'Extras', note:'Añade ingredientes a cualquier plato de la carta', items:[
+        ['x-cheddar','Cheddar',1,''],['x-bacon','Bacon',1,''],['x-jalap','Jalapeños',1,''],
+        ['x-ajonesa','Salsa ajonesa',1,''],['x-picante','Salsa picante',1,''],
+        ['x-mielmostaza','Salsa miel y mostaza',1,''],['x-bbq','Salsa BBQ',1,''],
+        ['x-heura','Heura',2,''],['x-guaca','Guacamole',2,''],
+        ['x-caramelizada','Cebolla caramelizada',2,''],['x-cabra','Queso de cabra',2,'']]}
+    ];
+  }
+
+  shop() {
+    return [
+      { id:'g-peaky', name:'Peaky Blinders', price:30, img:'https://static.wixstatic.com/media/f4b6f7_c2485c7acee541e7a0bf32be3fe1e0ce~mv2.jpg/v1/fit/w_500,h_500,q_90/file.jpg' },
+      { id:'g-valda', name:'Valda', price:35, img:'https://static.wixstatic.com/media/f4b6f7_09bc50b368c347d99a25fef88a2d6a7c~mv2.jpg/v1/fit/w_500,h_500,q_90/file.jpg' },
+      { id:'g-heroes', name:'Heroes of Fairy Tales', price:18, img:'https://static.wixstatic.com/media/f4b6f7_7fcf26a8989946e29b6cf615dc9d80d9~mv2.avif/v1/fit/w_500,h_500,q_90/file.webp' },
+      { id:'g-jurassic', name:'Jurassic Park Digger', price:10, img:'https://static.wixstatic.com/media/f4b6f7_164fb57fcdcc47f7ab786f914da27c14~mv2.jpg/v1/fit/w_500,h_500,q_90/file.jpg' },
+      { id:'g-monopoly', name:'Monopoly The Big Bang Theory', price:26.95, old:40.45, badge:'OUTLET', img:'https://static.wixstatic.com/media/f4b6f7_ea3cde3f614c4f1b8bf640c7fbd8e9f8~mv2.jpg/v1/fit/w_500,h_500,q_90/file.jpg' },
+      { id:'g-casapapel', name:'La Casa de Papel Escape Game', price:10 },
+      { id:'g-stickup', name:'Stick Up', price:8 },
+      { id:'g-dungeonwc', name:'Dungeon WC: Veni Vidi WC', price:5 },
+      { id:'g-starwars', name:'Star Wars: Imperio vs Rebelión', price:8.50, old:14.95, badge:'OUTLET' },
+      { id:'g-sc-atomico', name:'Story Cubes: Atómico', price:3.50, old:9.95, badge:'OUTLET' },
+      { id:'g-sc-arcade', name:'Story Cubes: Arcade', price:3.50, old:9.95, badge:'OUTLET' },
+      { id:'g-aventureros', name:'¡Aventureros al Tren! USA 1910', badge:'NOVEDAD', soldOut:true },
+      { id:'g-dobble', name:'Dobble', badge:'IMPRESCINDIBLE', soldOut:true },
+      { id:'g-azul', name:'Azul', badge:'IMPRESCINDIBLE', soldOut:true },
+      { id:'g-dixit', name:'Dixit', badge:'IMPRESCINDIBLE', soldOut:true },
+      { id:'g-jungle', name:'Jungle Speed Eco', badge:'IMPRESCINDIBLE', soldOut:true }
+    ];
+  }
+
+  eur(n) { return n.toFixed(2).replace('.', ',') + ' €'; }
+
+  setCart(id, delta, meta) {
+    this.setState(s => {
+      const cart = { ...s.cart };
+      const cur = cart[id] || { ...meta, qty: 0 };
+      const qty = cur.qty + delta;
+      if (qty <= 0) delete cart[id]; else cart[id] = { ...cur, qty };
+      return { cart };
+    });
+  }
+
+  renderVals() {
+    const s = this.state;
+    const tableNum = this.props.tableNumber ?? 14;
+    const showSoldOut = this.props.showSoldOut ?? true;
+    const cats = this.menu();
+    const chip = (active, activeBg) => ({
+      flexShrink: 0, border: '2px solid #1b1b1b', borderRadius: 999, padding: '7px 14px',
+      fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 700, fontSize: 14, letterSpacing: '1px',
+      cursor: 'pointer', textTransform: 'uppercase',
+      background: active ? activeBg : '#fff', color: active ? '#fff' : '#1b1b1b',
+      borderColor: active ? activeBg : '#1b1b1b'
+    });
+    const shopChip = { ...chip(s.tab === 'tienda', '#8DC63F'), background: s.tab === 'tienda' ? '#8DC63F' : '#eef7e0', borderColor: '#8DC63F', color: s.tab === 'tienda' ? '#fff' : '#5d8f1e' };
+    const tabs = [
+      { label: '🎲 Tienda de juegos', onClick: () => this.setState({ tab: 'tienda' }), style: shopChip },
+      ...cats.map(c => ({ label: c.label, onClick: () => this.setState({ tab: c.id }), style: chip(s.tab === c.id, '#EC168F') }))
+    ];
+    const isShop = s.tab === 'tienda';
+    const cat = cats.find(c => c.id === s.tab) || cats[0];
+    const items = cat.items.map(([id, name, price, desc, veg]) => {
+      const qty = s.cart[id]?.qty || 0;
+      return {
+        name, desc, veg: !!veg, hasDesc: !!desc, priceStr: this.eur(price),
+        qty, inCart: qty > 0, notInCart: qty === 0,
+        inc: () => this.setCart(id, 1, { name, price, type: 'mesa' }),
+        dec: () => this.setCart(id, -1, { name, price, type: 'mesa' })
+      };
+    });
+    const badgeColors = { OUTLET: '#EC168F', NOVEDAD: '#8DC63F', IMPRESCINDIBLE: '#1b1b1b' };
+    const filters = [['todos','Todos'],['outlet','Outlet'],['disponibles','Disponibles']].map(([id,label]) => ({
+      label, onClick: () => this.setState({ shopFilter: id }), style: chip(s.shopFilter === id, '#1b1b1b')
+    }));
+    let games = this.shop();
+    if (!showSoldOut) games = games.filter(g => !g.soldOut);
+    if (s.shopFilter === 'outlet') games = games.filter(g => g.badge === 'OUTLET');
+    if (s.shopFilter === 'disponibles') games = games.filter(g => !g.soldOut);
+    games = games.map(g => {
+      const qty = s.cart[g.id]?.qty || 0;
+      return {
+        name: g.name, soldOut: !!g.soldOut, available: !g.soldOut,
+        hasImg: !!g.img, noImg: !g.img,
+        imgEl: g.img ? React.createElement('img', { src: g.img, alt: g.name, style: { width: '100%', height: '100%', objectFit: 'contain', background: '#fff' } }) : null,
+        hasPrice: g.price != null, priceStr: g.price != null ? this.eur(g.price) : '',
+        hasOffer: g.old != null, oldPriceStr: g.old != null ? this.eur(g.old) : '',
+        hasBadge: !!g.badge, badge: g.badge || '',
+        badgeStyle: { position: 'absolute', top: 8, left: 8, background: badgeColors[g.badge] || '#1b1b1b', color: '#fff', fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 700, fontSize: 10, letterSpacing: '1px', padding: '3px 8px', borderRadius: 999 },
+        inCart: qty > 0, notInCart: qty === 0,
+        inc: () => this.setCart(g.id, 1, { name: g.name, price: g.price, type: 'tienda' }),
+        dec: () => this.setCart(g.id, -1, { name: g.name, price: g.price, type: 'tienda' })
+      };
+    });
+    const entries = Object.entries(s.cart);
+    const line = ([id, l]) => ({
+      name: l.name, qty: l.qty, lineTotalStr: this.eur(l.price * l.qty),
+      inc: () => this.setCart(id, 1, l), dec: () => this.setCart(id, -1, l),
+      remove: () => this.setCart(id, -l.qty, l)
+    });
+    const mesaItems = entries.filter(([, l]) => l.type === 'mesa').map(line);
+    const tiendaItems = entries.filter(([, l]) => l.type === 'tienda').map(line);
+    const cartCount = entries.reduce((a, [, l]) => a + l.qty, 0);
+    const total = entries.reduce((a, [, l]) => a + l.price * l.qty, 0);
+    return {
+      tableNum, tabs, isShop, isMenu: !isShop,
+      catTitle: cat.title, catNote: cat.note || '', hasCatNote: !!cat.note,
+      items, shopFilters: filters, games,
+      hasCart: cartCount > 0 && !s.cartOpen && !s.ordered,
+      cartCount, cartTotalStr: this.eur(total),
+      cartOpen: s.cartOpen, ordered: s.ordered,
+      hasMesa: mesaItems.length > 0, hasTienda: tiendaItems.length > 0,
+      mesaItems, tiendaItems,
+      openCart: () => { if (cartCount > 0) this.setState({ cartOpen: true }); },
+      closeCart: () => this.setState({ cartOpen: false }),
+      stop: e => e.stopPropagation(),
+      sendOrder: () => this.setState({ cartOpen: false, ordered: true }),
+      resetOrder: () => this.setState({ ordered: false, cart: {} })
+    };
+  }
+}
+</script>
+</body>
+</html>

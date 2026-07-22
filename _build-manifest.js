@@ -33,6 +33,23 @@ function gitDate(dir) {
   }
 }
 
+// Fecha de creación = primer commit que tocó la carpeta (proxy fiable de
+// "cuándo se añadió"). Uncommitted todavía = null → el buscador lo ordena
+// como el más reciente.
+function gitCreatedDate(dir) {
+  try {
+    const out = execSync(`git log --format=%cs -- "${dir}"`, {
+      cwd: ROOT,
+      encoding: "utf8",
+    }).trim();
+    if (!out) return null;
+    const lines = out.split("\n");
+    return lines[lines.length - 1] || null;
+  } catch {
+    return null;
+  }
+}
+
 function titleCase(slug) {
   return slug
     .split("-")
@@ -78,6 +95,7 @@ for (const slug of fs.readdirSync(PROTO_DIR).sort()) {
     location: hasOwnData ? restaurant.location || "" : "",
     ownData: hasOwnData,
     updated: gitDate(`prototypes/${slug}`),
+    created: gitCreatedDate(`prototypes/${slug}`),
     archived: previous[slug]?.archived || false,
   });
 }

@@ -108,7 +108,7 @@
           <div class="meta">
             ${p.location ? `<span>${p.location}</span>` : ""}
             <span class="badge ${p.ownData ? "own" : ""}">${p.ownData ? "datos propios" : "datos demo"}</span>
-            ${p.updated ? `<span>${p.updated}</span>` : ""}
+            ${p.created || p.updated ? `<span>${p.created || p.updated}</span>` : ""}
           </div>
           ${p.tagline ? `<p class="tagline">${p.tagline}</p>` : ""}
         </a>`
@@ -121,9 +121,10 @@
     fetch("manifest.json")
       .then((r) => r.json())
       .then((data) => {
-        items = data.prototypes.sort((a, b) =>
-          (b.updated || "").localeCompare(a.updated || "")
-        );
+        // Orden por fecha de creación, más nuevo primero. Uncommitted
+        // (created null) = recién añadido → va arriba del todo.
+        const key = (p) => p.created || "9999-99-99";
+        items = data.prototypes.sort((a, b) => key(b).localeCompare(key(a)));
         render("");
       })
       .catch(() => {
